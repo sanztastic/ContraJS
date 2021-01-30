@@ -1,4 +1,5 @@
 import TileFactory from "./TileFactory.js";
+import { playerData } from '../players/playerData.js';
 
 /**
  * The class to generate the water tiles where the player can swim and have some different
@@ -18,7 +19,9 @@ export default class WaterTile extends TileFactory {
 
             player.onGround = false;
             player.onWater = true;
+            player.jumping = false;
             player.destinationY = this.y - player.height;
+            if (!player.drop) player.frameArr = playerData.water.drop;
         }
         if (player.camera) {
             this.dx = -2;
