@@ -24,7 +24,7 @@ export default class Map {
     update(player) {
         this.dx = 0;
         if (player.camera) {
-            this.dx = -2;
+            this.dx = -2.5;
         }
         this.destinationX += this.dx;
     }

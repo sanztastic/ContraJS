@@ -1,7 +1,7 @@
 import { createImageElement } from '../utils/utilities.js';
 import { playerData } from './playerData.js';
 import * as CONSTANTS from '../utils/constants.js';
-import { Direction } from '../enum/Direction.js';
+import { Direction, Key } from '../utils/Enums.js';
 
 /**
  * These class does the logic for the player on the game from drawing and updating the player
@@ -20,14 +20,12 @@ class Player {
         this.width = 0;
         this.src = './assets/contra.gif';
         this.playerImg = createImageElement(this.src);
-        this.gravity = 0.10;
+        this.gravity = 0.2;
         this.jump = -30;
         this.dx = 2; // horizontal(x) velocity of a player 
         this.dy = 0; //vertical(y) velocity of a player
         this.onGround = false; //to check whether player is in ground 
         this.onWater = false;  //to check whether player is in ground
-        this.holdLeft = false;
-        this.holdRight = false;
         this.jumping = false;
         this.isProne = false;
         this.camera = false;
@@ -36,8 +34,7 @@ class Player {
         this.frames = 0;
         this.period = 8; //hold time for player animation
         this.drop = false;
-        this.direction = Direction.RIGHT; //to check which direction is player turned in
-        this.pointUp = false;
+        this.direction = Direction.RIGHT; //to check which direction the player is facing curently
 
         document.addEventListener('keydown', this.keyPressed.bind(this));
         document.addEventListener('keyup', this.keyReleased.bind(this));
@@ -47,20 +44,22 @@ class Player {
         switch (evt.keyCode) {
 
             case 37: //left arrow
-                this.holdLeft = true;
+                Key.LEFT = true;
                 this.direction = Direction.LEFT;
                 break;
 
             case 38: //up arrow
+                Key.UP = true;
                 if (this.onGround) {
                     this.frameArr = this.direction == Direction.RIGHT ? playerData.pointUpRightDir : playerData.pointUpLeftDir;
-                    this.pointUp = true;
+                } else if (this.onWater) {
+                    this.frameArr = this.direction == Direction.RIGHT ? playerData.water.pointUpRightDir : playerData.water.pointUpLeftDir;
                 }
                 this.dx = 0;
                 break;
 
             case 39: //right arrow
-                this.holdRight = true;
+                Key.RIGHT = true;
                 this.direction = Direction.RIGHT;
                 break;
 
@@ -69,11 +68,13 @@ class Player {
                 // this.holdLeft = false;
                 // this.holdRight = false;
                 // this.jumping = false;
-                this.frameArr = this.onGround ? ((this.direction == Direction.RIGHT) ? playerData.proneRight : playerData.proneLeft) : playerData.water.prone;
+                Key.DOWN = true;
                 this.dx = 0;
+                this.frameArr = this.onGround ? ((this.direction == Direction.RIGHT) ? playerData.proneRight : playerData.proneLeft) : playerData.water.prone;
                 break;
 
             case 88: //x for jumping
+                Key.X = true;
                 if (!this.onWater && this.onGround) {
                     this.dy = this.jump;
                     this.jumping = true;
@@ -83,7 +84,7 @@ class Player {
                 break;
 
             case 90: //z for shooting
-
+                Key.Z = true;
                 break;
         }
     }
@@ -91,38 +92,41 @@ class Player {
         switch (evt.keyCode) {
 
             case 37: //left arrow
-                this.holdLeft = false;
+                Key.LEFT = false;
                 this.frame = 0;
                 break;
 
             case 38: //up arrow
                 //up arroww stufff 
-                this.pointUp = false;
+                Key.UP = false;
                 this.frame = 0;
                 break;
 
             case 39: //right arrow
-                this.holdRight = false;
+                Key.RIGHT = false;
                 // this.frameArr = playerData.default;
                 this.frame = 0;
                 break;
 
             case 40: // down arrow is for proning
                 this.isProne = false;
+                Key.DOWN = false;
                 // this.frameArr = this.onGround ? playerData.default : playerData.water.default;
                 this.frame = 0;
                 break;
 
             case 88: //x for jumping
+                Key.X = false;
                 if (!this.onWater) {
                     if (this.dy < -3) {
-                        this.dy = -1;
+                        this.dy = 1;
                     }
                 }
                 break;
 
             case 90: //z for shooting
-                //shooting stufff 
+                //shooting stufff
+                Key.Z = false;
                 break;
         }
     }
@@ -150,14 +154,14 @@ class Player {
     }
     update() {
 
-        if (this.holdLeft) {
+        if (Key.LEFT) {
             if (!this.jumping) {
                 this.frameArr = this.onWater ? playerData.water.left : playerData.left;
             }
             this.dx = -2.5;
 
         }
-        if (this.holdRight) {
+        if (Key.RIGHT) {
             if (!this.jumping) {
                 this.frameArr = this.onWater ? playerData.water.right : playerData.right;
             }
@@ -169,8 +173,8 @@ class Player {
         if ((this.onGround)) {
             this.jumping = false;
             this.drop = false;
-            this.water = false;
-            if (!(this.holdRight || this.holdLeft || this.isProne || this.pointUp)) {
+            this.onWater = false;
+            if (!(Key.RIGHT || Key.LEFT || this.isProne || Key.UP)) {
                 this.frameArr = (this.direction == Direction.RIGHT) ? playerData.defaultRight : playerData.defaultLeft;
                 this.dx *= 0.8;
                 this.frame = 0;
@@ -180,13 +184,14 @@ class Player {
          * stuff to do when the player on the water
          */
         else if (this.onWater) {
-            if (!(this.holdRight || this.holdLeft || this.isProne) && this.drop) {
+            if (!(Key.RIGHT || Key.LEFT || this.isProne) && (this.drop)) {
                 this.frameArr = (this.direction == Direction.RIGHT) ? playerData.water.defaultRight : playerData.water.defaultLeft;
                 this.dx *= 0.8;
                 this.frame = 0;
             }
         }
         else {
+            console.log("gravity");
             this.dy += this.gravity;
         }
 

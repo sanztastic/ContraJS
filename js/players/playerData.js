@@ -100,6 +100,47 @@ export const playerData = {
         width: 36,
         height: 68
     }],
+    shootRight: [
+        {
+            xPos: 450,
+            yPos: 114,
+            width: 48,
+            height: 69
+        },
+        {
+            xPos: 498,
+            yPos: 114,
+            width: 53,
+            height: 69
+        },
+        {
+            xPos: 450,
+            yPos: 87,
+            width: 52,
+            height: 67
+        }
+    ],
+    shootLeft: [
+        {
+            xPos: 60,
+            yPos: 114,
+            width: 48,
+            height: 69
+        },
+        {
+            xPos: 7,
+            yPos: 114,
+            width: 53,
+            height: 69
+        },
+        {
+            xPos: 56,
+            yPos: 87,
+            width: 52,
+            height: 67
+        }
+
+    ],
     pointUpLeftDir: [
         {
             xPos: 86,
@@ -194,9 +235,150 @@ export const playerData = {
             height: 40
         },
     ],
-    dead: [{
-
-    }],
+    upRight: [
+        {
+            xPos: 290,
+            yPos: 110,
+            width: 34,
+            height: 72
+        },
+        {
+            xPos: 336,
+            yPos: 110,
+            width: 42,
+            height: 72
+        },
+        {
+            xPos: 390,
+            yPos: 114,
+            width: 42,
+            height: 68
+        }
+    ],
+    upLeft: [
+        {
+            xPos: 236,
+            yPos: 110,
+            width: 34,
+            height: 72
+        },
+        {
+            xPos: 182,
+            yPos: 110,
+            width: 42,
+            height: 72
+        },
+        {
+            xPos: 128,
+            yPos: 114,
+            width: 42,
+            height: 68
+        }
+    ],
+    downRight: [
+        {
+            xPos: 290,
+            yPos: 188,
+            width: 42,
+            height: 70
+        },
+        {
+            xPos: 342,
+            yPos: 188,
+            width: 46,
+            height: 70
+        },
+        {
+            xPos: 400,
+            yPos: 192,
+            width: 46,
+            height: 66
+        }
+    ],
+    downLeft: [
+        {
+            xPos: 228,
+            yPos: 188,
+            width: 42,
+            height: 70
+        },
+        {
+            xPos: 172,
+            yPos: 188,
+            width: 46,
+            height: 70
+        },
+        {
+            xPos: 114,
+            yPos: 192,
+            width: 46,
+            height: 66
+        }
+    ],
+    deadRight: [
+        {
+            xPos: 290,
+            yPos: 396,
+            width: 46,
+            height: 36
+        },
+        {
+            xPos: 340,
+            yPos: 386,
+            width: 36,
+            height: 46
+        },
+        {
+            xPos: 382,
+            yPos: 396,
+            width: 46,
+            height: 36
+        },
+        {
+            xPos: 436,
+            yPos: 386,
+            width: 36,
+            height: 46
+        },
+        {
+            xPos: 476,
+            yPos: 410,
+            width: 68,
+            height: 22
+        },
+    ],
+    deadLeft: [
+        {
+            xPos: 224,
+            yPos: 396,
+            width: 46,
+            height: 36
+        },
+        {
+            xPos: 184,
+            yPos: 386,
+            width: 36,
+            height: 46
+        },
+        {
+            xPos: 132,
+            yPos: 396,
+            width: 46,
+            height: 36
+        },
+        {
+            xPos: 88,
+            yPos: 386,
+            width: 36,
+            height: 46
+        },
+        {
+            xPos: 16,
+            yPos: 410,
+            width: 68,
+            height: 22
+        },
+    ],
     water: {
         drop: [{
             xPos: 0,
@@ -249,6 +431,22 @@ export const playerData = {
                 height: 30
             }
         ],
+        shootRight: [
+            {
+                xPos: 342,
+                yPos: 434,
+                width: 50,
+                height: 32
+            }
+        ],
+        shootLeft: [
+            {
+                xPos: 168,
+                yPos: 434,
+                width: 50,
+                height: 32
+            }
+        ],
         prone: [
             {
                 xPos: 35,
@@ -263,5 +461,21 @@ export const playerData = {
                 height: 16
             }
         ],
+        pointUpLeftDir: [
+            {
+                xPos: 38,
+                yPos: 487,
+                width: 34,
+                height: 58
+            }
+        ],
+        pointUpRightDir: [
+            {
+                xPos: 78,
+                yPos: 487,
+                width: 34,
+                height: 58
+            }
+        ]
     }
 }

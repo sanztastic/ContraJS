@@ -24,7 +24,7 @@ export default class WaterTile extends TileFactory {
             if (!player.drop) player.frameArr = playerData.water.drop;
         }
         if (player.camera) {
-            this.dx = -2;
+            this.dx = -2.5;
         }
         this.x += this.dx;
     }
