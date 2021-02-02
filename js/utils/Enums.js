@@ -17,3 +17,12 @@ export const Key = {
     X: false,
     Z: false
 };
+
+/**
+ *  Enum to check which gun has been selected
+ */
+export const Gun = {
+    DEFAULT: 0,
+    MACHINE_GUN: 1,
+    SPREAD_GUN: 2
+}

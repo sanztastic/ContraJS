@@ -22,10 +22,10 @@ export default class TileGenerator {
         })
         this.waterTile.draw(ctx);
     }
-    update(player) {
+    update(player, soldierArr) {
         this.tileArr.forEach(tile => {
-            tile.update(player);
+            tile.update(player, soldierArr);
         })
-        this.waterTile.update(player);
+        this.waterTile.update(player, soldierArr);
     }
 }

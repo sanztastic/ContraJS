@@ -115,7 +115,7 @@ export const playerData = {
         },
         {
             xPos: 450,
-            yPos: 87,
+            yPos: 187,
             width: 52,
             height: 67
         }
@@ -135,7 +135,7 @@ export const playerData = {
         },
         {
             xPos: 56,
-            yPos: 87,
+            yPos: 187,
             width: 52,
             height: 67
         }
@@ -475,6 +475,22 @@ export const playerData = {
                 yPos: 487,
                 width: 34,
                 height: 58
+            }
+        ],
+        upLeft: [
+            {
+                xPos: 454,
+                yPos: 436,
+                width: 38,
+                height: 36
+            }
+        ],
+        upRight: [
+            {
+                xPos: 407,
+                yPos: 436,
+                width: 38,
+                height: 36
             }
         ]
     }

@@ -1,7 +1,8 @@
 import { createImageElement } from '../utils/utilities.js';
 import { playerData } from './playerData.js';
 import * as CONSTANTS from '../utils/constants.js';
-import { Direction, Key } from '../utils/Enums.js';
+import { Direction, Key, Gun } from '../utils/Enums.js';
+import Bullet from '../ammunition/Bullets.js';
 
 /**
  * These class does the logic for the player on the game from drawing and updating the player
@@ -25,16 +26,19 @@ class Player {
         this.dx = 2; // horizontal(x) velocity of a player 
         this.dy = 0; //vertical(y) velocity of a player
         this.onGround = false; //to check whether player is in ground 
-        this.onWater = false;  //to check whether player is in ground
+        this.onWater = false;  //to check whether player is in water
         this.jumping = false;
         this.isProne = false;
-        this.camera = false;
+        this.camera = false; //to check whether the camera is moving or not wit the player
         this.fall = false; //to make the player fall one tile down
         this.frame = 0;
         this.frames = 0;
         this.period = 8; //hold time for player animation
         this.drop = false;
         this.direction = Direction.RIGHT; //to check which direction the player is facing curently
+        this.bullets = [];
+        this.gun = Gun.DEFAULT; // to check which gun is the player holding
+        this.dead = false; // check if the player is dead or not
 
         document.addEventListener('keydown', this.keyPressed.bind(this));
         document.addEventListener('keyup', this.keyReleased.bind(this));
@@ -45,6 +49,7 @@ class Player {
 
             case 37: //left arrow
                 Key.LEFT = true;
+                this.dx = -2.5;
                 this.direction = Direction.LEFT;
                 break;
 
@@ -60,6 +65,7 @@ class Player {
 
             case 39: //right arrow
                 Key.RIGHT = true;
+                this.dx = 2.5;
                 this.direction = Direction.RIGHT;
                 break;
 
@@ -85,6 +91,7 @@ class Player {
 
             case 90: //z for shooting
                 Key.Z = true;
+                this.bullets.push(new Bullet(this.destinationX, this.destinationY, 6, 6));
                 break;
         }
     }
@@ -148,29 +155,52 @@ class Player {
                 this.drop = true;
             }
         }
+        if (this.dead) {
+            if (this.frame === ((this.direction == Direction.RIGHT) ? playerData.deadRight.length : playerData.deadLeft.length)) {
+                this.dead = false;
+                // this.onGround = true;
+                this.destinationX = 0 + this.dx;
+                this.destinationY = 0;
+            }
+        }
         // }
         // ctx.fillStyle = "rgba(0,0,0,0.5)";
         // ctx.fillRect(this.destinationX, this.destinationY, this.width, this.height);
     }
-    update() {
-
-        if (Key.LEFT) {
+    update(soldierArr) {
+        if (Key.LEFT && !this.dead) {
             if (!this.jumping) {
-                this.frameArr = this.onWater ? playerData.water.left : playerData.left;
+                if (!(Key.UP || Key.DOWN || Key.Z)) {
+                    this.frameArr = this.onWater ? playerData.water.left : playerData.left;
+                } else if (Key.UP) {
+                    this.frameArr = this.onWater ? playerData.water.upLeft : playerData.upLeft;
+                } else if (Key.DOWN && !this.onWater) {
+                    this.prone = false;
+                    this.frameArr = playerData.downLeft;
+                } else if (Key.Z) {
+                    this.frameArr = this.onWater ? playerData.water.shootLeft : playerData.shootLeft;
+                }
             }
-            this.dx = -2.5;
-
         }
-        if (Key.RIGHT) {
+
+        if (Key.RIGHT && !this.dead) {
             if (!this.jumping) {
-                this.frameArr = this.onWater ? playerData.water.right : playerData.right;
+                if (!(Key.UP || Key.DOWN || Key.Z)) {
+                    this.frameArr = this.onWater ? playerData.water.right : playerData.right;
+                } else if (Key.UP) {
+                    this.frameArr = this.onWater ? playerData.water.upRight : playerData.upRight;
+                } else if (Key.DOWN && !this.onWater) {
+                    this.prone = false;
+                    this.frameArr = playerData.downRight;
+                } else if (Key.Z) {
+                    this.frameArr = this.onWater ? playerData.water.shootRight : playerData.shootRight;
+                }
             }
-            this.dx = 2.5;
         }
         /**
          * what happens when player is in the ground
          */
-        if ((this.onGround)) {
+        if ((this.onGround) && !this.dead) {
             this.jumping = false;
             this.drop = false;
             this.onWater = false;
@@ -183,20 +213,36 @@ class Player {
         /**
          * stuff to do when the player on the water
          */
-        else if (this.onWater) {
-            if (!(Key.RIGHT || Key.LEFT || this.isProne) && (this.drop)) {
+        else if (this.onWater && !this.dead) {
+            if (!(Key.RIGHT || Key.LEFT || this.isProne || Key.UP) && (this.drop)) {
                 this.frameArr = (this.direction == Direction.RIGHT) ? playerData.water.defaultRight : playerData.water.defaultLeft;
                 this.dx *= 0.8;
                 this.frame = 0;
             }
         }
         else {
-            console.log("gravity");
             this.dy += this.gravity;
         }
 
         if (this.destinationX <= 0) {
             this.destinationX = 0;
+        }
+        if (this.destinationY + this.height > CONSTANTS.gameHeight) {
+
+            this.dead = true;
+            this.destinationY = CONSTANTS.gameHeight - this.height;
+            this.onGround = false;
+            this.onWater = false;
+        }
+        if (!this.dead) {
+            soldierArr.forEach(soldier => {
+                if ((soldier.x <= this.destinationX + this.width && soldier.x + soldier.width >= this.destinationX + this.width)
+                    && (soldier.y + soldier.height >= this.destinationY + this.height && soldier.y <= this.destinationY + this.height)) {
+                    console.log(true);
+                    this.dead = true;
+                    this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                }
+            });
         }
         // if (this.destinationY <= 50) {
         //     this.destinationY = 0;
@@ -209,6 +255,9 @@ class Player {
         }
         this.destinationX += this.dx;
         this.destinationY += this.dy;
+    }
+    _collideWithEnemies(soldierArr) {
+
     }
 }
 
