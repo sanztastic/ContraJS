@@ -1,7 +1,7 @@
 export const enemyData = {
     soldier: {
         generateAt: {
-            xPos: [800, 2500, 4000]
+            xPos: [800, 2500]
         },
         left: [
             {
@@ -122,8 +122,8 @@ export const enemyData = {
     },
     cannon: {
         generateAt: {
-            xPos: [4095, 4548, 1023],
-            yPos: [354, 225, 290]
+            xPos: [4095, 4548, 5505],
+            yPos: [290, 165, 226]
         },
         show: [
             {
@@ -206,7 +206,121 @@ export const enemyData = {
             }
         ]
     },
-    sensorShooter: {
+    wallTurret: {
+        generateAt: {
+            xPos: [2498, 3265, 3650, 5950, 6207],
+            yPos: [290, 225, 225, 352, 352]
+        },
+        default: [
+            {
+                xPos: 78,
+                yPos: 212,
+                width: 64,
+                height: 64
+            }
+        ],
+        show: [
+            {
+                xPos: 78,
+                yPos: 212,
+                width: 64,
+                height: 64
+            },
+            {
+                xPos: 78,
+                yPos: 144,
+                width: 64,
+                height: 64
+            }
+        ],
+        left: [
+            {
+                xPos: 10,
+                yPos: 144,
+                width: 64,
+                height: 64
+            },
+            {
+                xPos: 10,
+                yPos: 212,
+                width: 64,
+                height: 64
+            }
+        ],
+        right: [
+            {
+                xPos: 146,
+                yPos: 144,
+                width: 64,
+                height: 64
+            },
+            {
+                xPos: 146,
+                yPos: 212,
+                width: 64,
+                height: 64
+            }
+        ],
+        up: [
+            {
+                xPos: 78,
+                yPos: 76,
+                width: 64,
+                height: 64
+            }
+        ],
+        down: [
+            {
+                xPos: 78,
+                yPos: 348,
+                width: 64,
+                height: 64
+            }
+        ],
+        topLeft: [
+            {
+                xPos: 10,
+                yPos: 76,
+                width: 64,
+                height: 64
+            }
+        ],
+        topRight: [
+            {
+                xPos: 146,
+                yPos: 76,
+                width: 64,
+                height: 64
+            }
+        ],
+        downLeft: [
+            {
+                xPos: 10,
+                yPos: 280,
+                width: 64,
+                height: 64
+            },
+            {
+                xPos: 10,
+                yPos: 348,
+                width: 64,
+                height: 64
+            }
+        ],
+        downRight: [
+            {
+                xPos: 146,
+                yPos: 280,
+                width: 64,
+                height: 64
+            },
+            {
+                xPos: 146,
+                yPos: 348,
+                width: 64,
+                height: 64
+            }
+        ]
 
     }
 }

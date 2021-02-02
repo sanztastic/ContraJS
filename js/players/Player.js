@@ -22,7 +22,7 @@ class Player {
         this.src = './assets/contra.gif';
         this.playerImg = createImageElement(this.src);
         this.gravity = 0.2;
-        this.jump = -30;
+        this.jump = -6;
         this.dx = 2; // horizontal(x) velocity of a player 
         this.dy = 0; //vertical(y) velocity of a player
         this.onGround = false; //to check whether player is in ground 
@@ -151,12 +151,12 @@ class Player {
         this.frames++;
 
         if (this.onWater) {
-            if (this.frame === playerData.water.drop.length) {
+            if (this.frame % playerData.water.drop.length === playerData.water.drop.length - 1) {
                 this.drop = true;
             }
         }
         if (this.dead) {
-            if (this.frame === ((this.direction == Direction.RIGHT) ? playerData.deadRight.length : playerData.deadLeft.length)) {
+            if (this.frame % this.frameArr.length === ((this.direction == Direction.RIGHT) ? playerData.deadRight.length - 1 : playerData.deadLeft.length - 1)) {
                 this.dead = false;
                 // this.onGround = true;
                 this.destinationX = 0 + this.dx;
@@ -231,6 +231,7 @@ class Player {
 
             this.dead = true;
             this.destinationY = CONSTANTS.gameHeight - this.height;
+            this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
             this.onGround = false;
             this.onWater = false;
         }
@@ -241,6 +242,7 @@ class Player {
                     console.log(true);
                     this.dead = true;
                     this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                    this.dy = -5;
                 }
             });
         }
