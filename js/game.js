@@ -3,8 +3,10 @@ import Map from './backgrounds/Map.js';
 import Player from './players/Player.js';
 import TileGenerator from './tiles/TileGenerator.js';
 import Enemies from './enemies/Enemies.js';
-import { GameState } from './utils/Enums.js'
-// import WallEnemy from './enemies/WallEnemy.js';
+import { GameState } from './utils/Enums.js';
+import StartScreen from './backgrounds/StartScreen.js';
+import GameOver from './backgrounds/GameOver.js';
+import Life from './players/Life.js';
 
 /**
  * These class holds the main game logic and is the main class from which the game is ran.
@@ -33,18 +35,31 @@ export default class Game {
         this.enemyArr = this.enemies.getEnemies();
         this.snipers = this.enemies.getRifleMen();
         this.wallEnemies = this.enemies.getWallEnemies();
-        this.gameState = GameState.IN_GAME;
+        this.startScreen = new StartScreen();
+        this.gameOver = new GameOver();
+        this.gameState = GameState.INTRO;
+        this.life = new Life();
+
+        document.addEventListener('keyup', (evt) => {
+            if (evt.keyCode === 32 && this.gameState != GameState.IN_GAME) {
+                if (this.gameState == GameState.INTRO) this.gameState = GameState.IN_GAME;
+                if (this.gameState == GameState.GAME_OVER) location.reload();
+            }
+
+        });
     }
 
     draw() {
         this.map.draw(this.ctx);
         this.tileGenerator.draw(this.ctx);
         this.player.draw(this.ctx);
+        this.life.draw(this.ctx);
         /**
          * adding soldiers
          */
         this.enemyArr.forEach((enemy, index) => {
-            if (enemy.dead) {
+            if (enemy.blast) {
+                // enemy.blast.draw(this.ctx);
                 this.enemyArr.splice(index, 1);
             }
             enemy.draw(this.ctx);
@@ -53,7 +68,8 @@ export default class Game {
          * adding snipers(riflemen)
          */
         this.snipers.forEach((enemy, index) => {
-            if (enemy.dead) {
+            if (enemy.blast) {
+                // enemy.blast.draw(this.ctx);
                 this.snipers.splice(index, 1);
             }
             enemy.draw(this.ctx);
@@ -63,6 +79,7 @@ export default class Game {
          */
         this.wallEnemies.forEach((wallEnemy, i) => {
             if (wallEnemy.dead) {
+                // wallEnemy.blast.draw(this.ctx);
                 this.wallEnemies.splice(i, 1);
             }
             wallEnemy.draw(this.ctx);
@@ -96,9 +113,10 @@ export default class Game {
 
     update() {
         this.map.update(this.player);
-        this.player.update(this.enemyArr, this.snipers, this.wallEnemies);
+        this.player.update(this.enemyArr, this.snipers, this.wallEnemies, this.life);
+        this.life.update();
         this.enemyArr.forEach(enemy => enemy.update(this.player));
-        this.snipers.forEach(sniper => sniper.update(this.player));
+        this.snipers.forEach(sniper => sniper.update(this.player, this.ctx));
         this.wallEnemies.forEach(wallEnemy => wallEnemy.update(this.player));
         this.tileGenerator.update(this.player, this.enemyArr, this.snipers);
         this.player.bullets.forEach(bullet => bullet.update(this.player));
@@ -108,13 +126,14 @@ export default class Game {
         this.wallEnemies.forEach(enemy => {
             enemy.bulletArr.forEach(bullet => bullet.update(enemy));
         });
-        // if (this.player.dead) this.gameState = GameState.DIED;
+        if (this.life.gameOver) this.gameState = GameState.GAME_OVER;
     }
 
     start() {
         this.ctx.clearRect(0, 0, CONSTANTS.gameWidth, CONSTANTS.gameHeight);
         switch (this.gameState) {
             case GameState.INTRO:
+                this.startScreen.draw(this.ctx);
                 break;
             case GameState.BEGINING:
                 this.init();
@@ -128,6 +147,7 @@ export default class Game {
                 this.gameState = GameState.BEGINING;
                 break;
             case GameState.GAME_OVER:
+                this.gameOver.draw(this.ctx, this.player);
                 break;
         }
         // this.update();

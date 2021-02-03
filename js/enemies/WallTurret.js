@@ -74,6 +74,7 @@ export default class wallTurret extends WallEnemy {
 
         if (this.x <= 0) {
             this.dead = true;
+            this.blast = true;
         }
 
         this.checkBulletCollision(player);

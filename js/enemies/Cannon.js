@@ -57,6 +57,7 @@ export default class Cannon extends WallEnemy {
 
         if (this.x <= 0) {
             this.dead = true;
+            this.blast = true;
         }
 
         this.checkBulletCollision(player);

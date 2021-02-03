@@ -1,6 +1,7 @@
-import Bullet from '../ammunition/Bullets.js';
 import { Gun, BulletOwner, BulletDirection } from '../utils/Enums.js';
 import { createImageElement } from '../utils/utilities.js';
+import Blast from '../ammunition/Blast.js';
+import { blastData } from '../ammunition/bulletData.js';
 
 /**
  * These class is the parent class for the enemies which are stuck to
@@ -31,6 +32,7 @@ export default class WallEnemy {
         this.bulletOwner = BulletOwner.ENEMY;
         this.shoot = false;
         this.shootHold = 0;
+        this.blast = false;
     }
 
     draw(ctx) {
@@ -49,23 +51,38 @@ export default class WallEnemy {
             }
         }
 
+        // if (this.dead && (this.frame % this.frameArr.length == this.frameArr.length - 1)) {
+        //     this.blast = true;
+        // }
+
         this.frame += this.frames % this.period === 0 ? 1 : 0;
         this.frames++;
     }
 
-    checkBulletCollision(player) {
-        player.bullets.forEach((bullet) => {
-            if ((bullet.x + bullet.width >= this.x && bullet.x + bullet.width < this.x + this.width && bullet.y >= this.y && bullet.y <= this.y + this.height)) {
+    checkBulletCollision(player, ctx) {
+        if (!this.dead) {
+            player.bullets.forEach((bullet) => {
+                if ((bullet.x + bullet.width >= this.x && bullet.x + bullet.width < this.x + this.width && bullet.y >= this.y && bullet.y <= this.y + this.height)) {
 
-                bullet.dead = true;
-                this.health -= bullet.damage;
-                if (this.health <= 0) {
-                    this.dead = true;
-                    player.score += 500;
+                    bullet.dead = true;
+                    this.health -= bullet.damage;
+                    if (this.health <= 0) {
+                        this.dead = true;
+                        player.score += 500;
+
+                        // this.image = createImageElement('./assets/ammunition.gif');
+                        // this.frameArr = blastData.hitShot;
+                        // this.period = 500;
+                        // this.frame = 0;
+
+                        // this.blast = new Blast(this.x, this.y);
+                        // this.blast.dead = true;
+                        // this.blast.frameArr = blastData.blast;
+                    }
+
+
                 }
-
-
-            }
-        });
+            });
+        }
     }
 }

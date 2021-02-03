@@ -1,5 +1,6 @@
 import HumanEnemy from './HumanEnemy.js';
 import { enemyData } from './enemyData.js';
+import { blastData } from '../ammunition/bulletData.js';
 
 /**
  * These class is for one of the enemy troops soldier that runs towards the player
@@ -26,7 +27,11 @@ export default class Soldier extends HumanEnemy {
         if (this.x <= 0) {
             this.dead = true;
             this.onGround = false;
+            this.blast = true;
         }
+        // if (this.dead) {
+        //     this.frameArr = blastData.hitShot;
+        // }
 
         this.checkBulletCollision(player);
 

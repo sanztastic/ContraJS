@@ -1,4 +1,6 @@
 import { createImageElement } from '../utils/utilities.js';
+import Blast from '../ammunition/Blast.js';
+import { blastData } from '../ammunition/bulletData.js';
 
 /**
  * These is the parent class form every human enemies. All the enemies like soldiers and rifle man 
@@ -22,9 +24,10 @@ export default class HumanEnemy {
         this.period = 8;
         this.frame = 0;
         this.frames = 0;
+        this.blast = false;
     }
     draw(ctx) {
-        if (!this.dead) {
+        if (!this.blast) {
             this.sourceX = this.frameArr[this.frame % this.frameArr.length].xPos;
             this.sourceY = this.frameArr[this.frame % this.frameArr.length].yPos;
             this.height = this.frameArr[this.frame % this.frameArr.length].height;
@@ -35,16 +38,29 @@ export default class HumanEnemy {
 
             this.frame += this.frames % this.period === 0 ? 1 : 0;
             this.frames++;
+            if (this.dead && (this.frame % this.frameArr.length == this.frameArr.length - 1)) {
+                this.blast = true;
+            }
         }
     }
     checkBulletCollision(player) {
-        player.bullets.forEach((bullet) => {
-            if ((bullet.x + bullet.width >= this.x && bullet.x + bullet.width < this.x + this.width && bullet.y >= this.y && bullet.y <= this.y + this.height)) {
-                bullet.dead = true;
-                this.dead = true;
-                console.log(this);
-                player.score += 100;
-            }
-        });
+        if (!this.dead) {
+            player.bullets.forEach((bullet) => {
+                if ((bullet.x + bullet.width >= this.x && bullet.x + bullet.width < this.x + this.width && bullet.y >= this.y && bullet.y <= this.y + this.height)) {
+                    bullet.dead = true;
+                    this.dead = true;
+                    player.score += 100;
+                    this.enemyImg = createImageElement('./assets/ammunition.gif');
+                    this.frameArr = blastData.hitShot;
+                    this.period = 30;
+                    this.frame = 0;
+                    this.frames = 0;
+                    // console.log(this.x, this.y);
+                    // this.blast = new Blast(this);
+                    // this.blast.dead = true;
+                    // this.blast.frameArr = blastData.hitShot;
+                }
+            });
+        }
     }
 }
