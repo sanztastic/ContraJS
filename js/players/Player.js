@@ -1,7 +1,7 @@
-import { createImageElement } from '../utils/utilities.js';
+import { createImageElement, setXandYForBullet } from '../utils/utilities.js';
 import { playerData } from './playerData.js';
 import * as CONSTANTS from '../utils/constants.js';
-import { Direction, Key, Gun } from '../utils/Enums.js';
+import { Direction, Key, Gun, BulletOwner, BulletDirection } from '../utils/Enums.js';
 import Bullet from '../ammunition/Bullets.js';
 
 /**
@@ -36,9 +36,12 @@ class Player {
         this.period = 8; //hold time for player animation
         this.drop = false;
         this.direction = Direction.RIGHT; //to check which direction the player is facing curently
-        this.bullets = [];
+        this.bullets = []; //array that holds bullet shot by the player
         this.gun = Gun.DEFAULT; // to check which gun is the player holding
         this.dead = false; // check if the player is dead or not
+        this.bulletDirection = BulletDirection.RIGHT;
+        this.bulletOwner = BulletOwner.PLAYER;
+        this.score = 0;
 
         document.addEventListener('keydown', this.keyPressed.bind(this));
         document.addEventListener('keyup', this.keyReleased.bind(this));
@@ -90,9 +93,28 @@ class Player {
                 break;
 
             case 90: //z for shooting
-                Key.Z = true;
-                this.bullets.push(new Bullet(this.destinationX, this.destinationY, 6, 6));
-                break;
+                if (!Key.Z) {
+                    Key.Z = true;
+                    if (this.gun == Gun.SPREAD_GUN) {
+                        let j = -20;
+                        for (let i = 0; i < 3; i++) {
+                            let bullet = new Bullet(setXandYForBullet(this).x, setXandYForBullet(this).y + j, setXandYForBullet(this).dx, setXandYForBullet(this).dy);
+                            bullet.bulletOwner = BulletOwner.PLAYER;
+                            bullet.direction = this.bulletDirection;
+                            this.bullets.push(bullet);
+                            j += 20;
+                        }
+                    }
+                    else {
+                        let bullet = new Bullet(setXandYForBullet(this).x, setXandYForBullet(this).y, setXandYForBullet(this).dx, setXandYForBullet(this).dy);
+                        bullet.bulletOwner = BulletOwner.PLAYER;
+                        bullet.direction = this.bulletDirection;
+                        console.log(bullet);
+                        this.bullets.push(bullet);
+                    }
+
+                    break;
+                }
         }
     }
     keyReleased(evt) {
@@ -105,6 +127,7 @@ class Player {
 
             case 38: //up arrow
                 //up arroww stufff 
+                this.direction = Direction.UP;
                 Key.UP = false;
                 this.frame = 0;
                 break;
@@ -167,7 +190,7 @@ class Player {
         // ctx.fillStyle = "rgba(0,0,0,0.5)";
         // ctx.fillRect(this.destinationX, this.destinationY, this.width, this.height);
     }
-    update(soldierArr) {
+    update(soldierArr, snipers, wallEnemies) {
         if (Key.LEFT && !this.dead) {
             if (!this.jumping) {
                 if (!(Key.UP || Key.DOWN || Key.Z)) {
@@ -206,6 +229,7 @@ class Player {
             this.onWater = false;
             if (!(Key.RIGHT || Key.LEFT || this.isProne || Key.UP)) {
                 this.frameArr = (this.direction == Direction.RIGHT) ? playerData.defaultRight : playerData.defaultLeft;
+                this.bulletDirection = (this.direction == Direction.RIGHT) ? BulletDirection.RIGHT : BulletDirection.LEFT;
                 this.dx *= 0.8;
                 this.frame = 0;
             }
@@ -215,7 +239,11 @@ class Player {
          */
         else if (this.onWater && !this.dead) {
             if (!(Key.RIGHT || Key.LEFT || this.isProne || Key.UP) && (this.drop)) {
-                this.frameArr = (this.direction == Direction.RIGHT) ? playerData.water.defaultRight : playerData.water.defaultLeft;
+                if (Key.Z) {
+                    this.frameArr = (this.direction == Direction.RIGHT) ? playerData.water.shootRight : playerData.water.shootLeft;
+                } else {
+                    this.frameArr = (this.direction == Direction.RIGHT) ? playerData.water.defaultRight : playerData.water.defaultLeft;
+                }
                 this.dx *= 0.8;
                 this.frame = 0;
             }
@@ -242,24 +270,60 @@ class Player {
                     console.log(true);
                     this.dead = true;
                     this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
-                    this.dy = -5;
+                }
+            });
+
+            snipers.forEach(sniper => {
+                if ((sniper.x <= this.destinationX + this.width && sniper.x + sniper.width >= this.destinationX + this.width)
+                    && (sniper.y + sniper.height >= this.destinationY + this.height && sniper.y <= this.destinationY + this.height)) {
+                    console.log(true);
+                    this.dead = true;
+                    this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                    this.dy = -3;
                 }
             });
         }
-        // if (this.destinationY <= 50) {
-        //     this.destinationY = 0;
-        // }
+
+        if (Key.RIGHT && Key.Z && !(Key.LEFT || Key.UP || Key.DOWN)) {
+            this.bulletDirection = BulletDirection.RIGHT;
+        } else if (Key.LEFT && Key.Z && !(Key.RIGHT || Key.UP || Key.DOWN)) {
+            this.bulletDirection = BulletDirection.LEFT;
+        } else if (Key.RIGHT && Key.Z && Key.DOWN) {
+            this.bulletDirection = BulletDirection.DOWN_RIGHT;
+        } else if (Key.LEFT && Key.Z && Key.DOWN) {
+            this.bulletDirection = BulletDirection.DOWN_LEFT;
+        } else if (Key.RIGHT && Key.Z && Key.UP) {
+            this.bulletDirection = BulletDirection.RIGHT_UP;
+        } else if (Key.LEFT && Key.Z && Key.UP) {
+            this.bulletDirection = BulletDirection.LEFT_UP
+            console.log(this.bulletDirection);
+        } else if (Key.UP && Key.Z) {
+            this.bulletDirection = BulletDirection.UP;
+        }
+
+        snipers.forEach(sniper => this.checkBulletCollision(sniper));
+        wallEnemies.forEach(enemy => this.checkBulletCollision(enemy));
+
         if (this.destinationX + this.width > (CONSTANTS.gameWidth / 2)) {
             this.destinationX = ((CONSTANTS.gameWidth / 2) - this.width) - 2;
             this.camera = true;
         } else {
             this.camera = false;
         }
+
         this.destinationX += this.dx;
         this.destinationY += this.dy;
     }
-    _collideWithEnemies(soldierArr) {
 
+    checkBulletCollision(player) {
+        player.bulletArr.forEach((bullet) => {
+            if ((bullet.x + bullet.width >= this.destinationX && bullet.x + bullet.width < this.destinationX + this.width && bullet.y >= this.destinationY && bullet.y <= this.destinationY + this.height)) {
+                bullet.dead = true;
+                this.dead = true;
+                this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                this.dy = -3;
+            }
+        });
     }
 }
 

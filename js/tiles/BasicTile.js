@@ -5,7 +5,7 @@ export default class BasicTile extends TileFactory {
         super(x, y, height, width);
         this.dx = 0;
     }
-    update(player, soldierArr) {
+    update(player, soldierArr, snipers) {
         this.dx = 0;
         // if (!player.fall) {
         if (player.destinationX + player.width > this.x && player.destinationX < this.x + this.width &&
@@ -25,6 +25,17 @@ export default class BasicTile extends TileFactory {
                 soldier.y = this.y - soldier.height;
             }
         });
+
+        snipers.forEach(sniper => {
+            if (sniper.x + sniper.width > this.x && sniper.x < this.x + this.width &&
+                sniper.y + sniper.height > this.y && sniper.y < this.y + this.height) {
+
+                sniper.onGround = true;
+                sniper.dead = false;
+                sniper.y = this.y - sniper.height;
+            }
+        });
+
         if (player.camera) {
             this.dx = -2.5;
         }

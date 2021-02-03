@@ -16,7 +16,7 @@ export default class Soldier extends HumanEnemy {
     constructor(x, y) {
         super(x, y, enemyData.soldier.left);
     }
-    update() {
+    update(player) {
         if (this.onGround) {
             this.dy = 0;
             this.dx = -2.5;
@@ -27,6 +27,9 @@ export default class Soldier extends HumanEnemy {
             this.dead = true;
             this.onGround = false;
         }
+
+        this.checkBulletCollision(player);
+
         this.x += this.dx;
         this.y += this.dy;
     }

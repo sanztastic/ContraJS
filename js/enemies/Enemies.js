@@ -13,6 +13,7 @@ export default class Enemies {
 
     constructor() {
         this.enemyArr = [];
+        this.snipers = [];
         this.wallEnemies = [];
     }
 
@@ -24,7 +25,10 @@ export default class Enemies {
             }
         });
         enemyData.rifleMan.generateAt.xPos.forEach((pos, index) => {
-            this.enemyArr.push(new RifleMen(pos, enemyData.rifleMan.generateAt.yPos[index]));
+            // let x = pos;
+            // let y = enemyData.rifleMan.yPos[index];
+            let y = (enemyData.rifleMan.generateAt.yPos[index]);
+            this.snipers.push(new RifleMen(pos, y));
         });
         enemyData.cannon.generateAt.xPos.forEach((pos, index) => {
             this.wallEnemies.push(new Cannon(pos, enemyData.cannon.generateAt.yPos[index]));
@@ -40,5 +44,9 @@ export default class Enemies {
 
     getWallEnemies() {
         return this.wallEnemies;
+    }
+
+    getRifleMen() {
+        return this.snipers;
     }
 }

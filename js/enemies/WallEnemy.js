@@ -1,3 +1,5 @@
+import Bullet from '../ammunition/Bullets.js';
+import { Gun, BulletOwner, BulletDirection } from '../utils/Enums.js';
 import { createImageElement } from '../utils/utilities.js';
 
 /**
@@ -21,6 +23,14 @@ export default class WallEnemy {
         this.dx = 0;
         this.dead = false;
         this.show = false;
+        this.health = 500;
+
+        this.gun = Gun.DEFAULT;
+        this.bulletDirection = BulletDirection.RIGHT;
+        this.bulletArr = [];
+        this.bulletOwner = BulletOwner.ENEMY;
+        this.shoot = false;
+        this.shootHold = 0;
     }
 
     draw(ctx) {
@@ -34,13 +44,28 @@ export default class WallEnemy {
 
         if (this.show) {
             if (this.frame % this.frameArr.length == this.frameArr.length - 1) {
-                console.log("making sow and hode false");
-                console.log('eh');
                 this.hide = false;
                 this.show = false;
             }
         }
+
         this.frame += this.frames % this.period === 0 ? 1 : 0;
         this.frames++;
+    }
+
+    checkBulletCollision(player) {
+        player.bullets.forEach((bullet) => {
+            if ((bullet.x + bullet.width >= this.x && bullet.x + bullet.width < this.x + this.width && bullet.y >= this.y && bullet.y <= this.y + this.height)) {
+
+                bullet.dead = true;
+                this.health -= bullet.damage;
+                if (this.health <= 0) {
+                    this.dead = true;
+                    player.score += 500;
+                }
+
+
+            }
+        });
     }
 }

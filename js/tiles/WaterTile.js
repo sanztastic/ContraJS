@@ -12,7 +12,7 @@ export default class WaterTile extends TileFactory {
         super(x, y, height, width);
         this.dx = 0;
     }
-    update(player, soldierArr) {
+    update(player, soldierArr, snipers) {
         this.dx = 0;
         if (player.destinationX + player.width > this.x && player.destinationX < this.x + this.width &&
             player.destinationY + player.height > this.y && player.destinationY < this.y + this.height) {
@@ -29,6 +29,14 @@ export default class WaterTile extends TileFactory {
 
                 soldier.onGround = false;
                 soldier.dead = true;
+            }
+        });
+        snipers.forEach(sniper => {
+            if (sniper.x + sniper.width > this.x && sniper.x < this.x + this.width &&
+                sniper.y + sniper.height > this.y && sniper.y < this.y + this.height) {
+
+                sniper.onGround = false;
+                sniper.dead = true;
             }
         });
         if (player.camera) {

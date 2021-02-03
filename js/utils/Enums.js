@@ -26,3 +26,25 @@ export const Gun = {
     MACHINE_GUN: 1,
     SPREAD_GUN: 2
 }
+
+/**
+ * Enum for the direction of the Bullet
+ */
+export const BulletDirection = {
+    LEFT: 0,
+    LEFT_UP: 1,
+    UP: 2,
+    RIGHT_UP: 3,
+    RIGHT: 4,
+    DOWN_RIGHT: 5,
+    DOWN: 6,
+    DOWN_LEFT: 7
+}
+
+/**
+ * Enum for who shot the bullet
+ */
+export const BulletOwner = {
+    PLAYER: 0,
+    ENEMY: 1
+}

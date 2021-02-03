@@ -26,6 +26,7 @@ export default class Game {
         this.enemies = new Enemies();
         this.enemies.generateEnemies();
         this.enemyArr = this.enemies.getEnemies();
+        this.snipers = this.enemies.getRifleMen();
         this.wallEnemies = this.enemies.getWallEnemies();
     }
 
@@ -34,13 +35,22 @@ export default class Game {
         this.player.draw(this.ctx);
         this.tileGenerator.draw(this.ctx);
         /**
-         * adding soldiers and snipers(rifleman)
+         * adding soldiers
          */
         this.enemyArr.forEach((enemy, index) => {
             if (enemy.dead) {
                 this.enemyArr.splice(index, 1);
             }
             enemy.draw(this.ctx);
+        });
+        /**
+         * adding snipers(riflemen)
+         */
+        this.snipers.forEach((sniper, i) => {
+            if (sniper.dead) {
+                this.snipers.splice(i, 1);
+            }
+            sniper.draw(this.ctx);
         });
         /**
          * adding wall cannons and wall turrets
@@ -51,15 +61,47 @@ export default class Game {
             }
             wallEnemy.draw(this.ctx);
         });
-        // console.log(this.enemyArr.length);
+        /**
+         * Drawing bullets from player
+         */
+        this.player.bullets.forEach((bullet, index) => {
+            if (bullet.dead) this.player.bullets.splice(index, 1);
+            bullet.draw(this.ctx);
+        });
+        /**
+         * Drawing bullet from sniper
+         */
+        this.snipers.forEach(enemy => {
+            enemy.bulletArr.forEach((bullet, i) => {
+                if (bullet.dead) enemy.bulletArr.splice(i, 1);
+                bullet.draw(this.ctx);
+            });
+        });
+        /**
+         * Drawing bullets for cannon and wall turrets
+         */
+        this.wallEnemies.forEach(enemy => {
+            enemy.bulletArr.forEach((bullet, i) => {
+                if (bullet.dead) enemy.bulletArr.splice(i, 1);
+                bullet.draw(this.ctx);
+            });
+        });
     }
 
     update() {
         this.map.update(this.player);
-        this.player.update(this.enemyArr);
+        this.player.update(this.enemyArr, this.snipers, this.wallEnemies);
         this.enemyArr.forEach(enemy => enemy.update(this.player));
+        this.snipers.forEach(sniper => sniper.update(this.player));
         this.wallEnemies.forEach(wallEnemy => wallEnemy.update(this.player));
-        this.tileGenerator.update(this.player, this.enemyArr);
+        this.tileGenerator.update(this.player, this.enemyArr, this.snipers);
+        this.player.bullets.forEach(bullet => bullet.update(this.player));
+        this.snipers.forEach(enemy => {
+            enemy.bulletArr.forEach(bullet => bullet.update(enemy));
+        });
+        this.wallEnemies.forEach(enemy => {
+            enemy.bulletArr.forEach(bullet => bullet.update(enemy));
+        });
     }
 
     start() {

@@ -37,4 +37,13 @@ export default class HumanEnemy {
             this.frames++;
         }
     }
+    checkBulletCollision(player) {
+        player.bullets.forEach((bullet) => {
+            if ((bullet.x + bullet.width >= this.x && bullet.x + bullet.width < this.x + this.width && bullet.y >= this.y && bullet.y <= this.y + this.height)) {
+                bullet.dead = true;
+                this.dead = true;
+                player.score += 100;
+            }
+        });
+    }
 }
