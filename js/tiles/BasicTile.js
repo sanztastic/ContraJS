@@ -31,7 +31,7 @@ export default class BasicTile extends TileFactory {
                 sniper.y + sniper.height > this.y && sniper.y < this.y + this.height) {
 
                 sniper.onGround = true;
-                sniper.dead = false;
+                // sniper.dead = false;
                 sniper.y = this.y - sniper.height;
             }
         });

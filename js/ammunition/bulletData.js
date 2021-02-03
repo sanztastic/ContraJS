@@ -15,4 +15,8 @@ export const bulletData = {
         width: 12,
         height: 12
     }
+};
+
+export const blastData = {
+
 }

@@ -28,4 +28,10 @@ export default class TileGenerator {
         })
         this.waterTile.update(player, soldierArr, snipers);
     }
+    reset() {
+        this.tileArr.forEach(tile => {
+            tile.reset();
+        })
+        this.waterTile.reset();
+    }
 }

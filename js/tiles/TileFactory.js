@@ -19,4 +19,7 @@ export default class TileFactory {
         ctx.fillStyle = 'rgba(0,0,0,0)';
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
+    reset() {
+        this.x = 0;
+    }
 }

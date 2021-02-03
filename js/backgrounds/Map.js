@@ -28,4 +28,8 @@ export default class Map {
         }
         this.destinationX += this.dx;
     }
+    reset() {
+        this.destinationX = 0;
+        this.dx = 0;
+    }
 }

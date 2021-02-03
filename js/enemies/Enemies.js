@@ -25,16 +25,13 @@ export default class Enemies {
             }
         });
         enemyData.rifleMan.generateAt.xPos.forEach((pos, index) => {
-            // let x = pos;
-            // let y = enemyData.rifleMan.yPos[index];
-            let y = (enemyData.rifleMan.generateAt.yPos[index]);
-            this.snipers.push(new RifleMen(pos, y));
+            this.snipers.push(new RifleMen(pos, enemyData.rifleMan.generateAt.yPos[index]));
         });
         enemyData.cannon.generateAt.xPos.forEach((pos, index) => {
             this.wallEnemies.push(new Cannon(pos, enemyData.cannon.generateAt.yPos[index]));
         });
         enemyData.wallTurret.generateAt.xPos.forEach((pos, index) => {
-            this.wallEnemies.push(new WallTurret(pos, enemyData.wallTurret.generateAt.yPos[index]))
+            this.wallEnemies.push(new WallTurret(pos, enemyData.wallTurret.generateAt.yPos[index]));
         });
     }
 
@@ -48,5 +45,11 @@ export default class Enemies {
 
     getRifleMen() {
         return this.snipers;
+    }
+
+    reset() {
+        this.enemyArr = [];
+        this.snipers = [];
+        this.wallEnemies = [];
     }
 }

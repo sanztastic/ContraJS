@@ -42,6 +42,7 @@ export default class HumanEnemy {
             if ((bullet.x + bullet.width >= this.x && bullet.x + bullet.width < this.x + this.width && bullet.y >= this.y && bullet.y <= this.y + this.height)) {
                 bullet.dead = true;
                 this.dead = true;
+                console.log(this);
                 player.score += 100;
             }
         });

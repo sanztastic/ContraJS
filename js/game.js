@@ -3,7 +3,8 @@ import Map from './backgrounds/Map.js';
 import Player from './players/Player.js';
 import TileGenerator from './tiles/TileGenerator.js';
 import Enemies from './enemies/Enemies.js';
-import WallEnemy from './enemies/WallEnemy.js';
+import { GameState } from './utils/Enums.js'
+// import WallEnemy from './enemies/WallEnemy.js';
 
 /**
  * These class holds the main game logic and is the main class from which the game is ran.
@@ -17,6 +18,10 @@ export default class Game {
      */
     constructor(canvasName) {
         this.canvas = document.getElementById(canvasName);
+        this.init();
+    }
+
+    init() {
         this.canvas.height = CONSTANTS.gameHeight;
         this.canvas.width = CONSTANTS.gameWidth;
         this.ctx = canvas.getContext('2d');
@@ -28,12 +33,13 @@ export default class Game {
         this.enemyArr = this.enemies.getEnemies();
         this.snipers = this.enemies.getRifleMen();
         this.wallEnemies = this.enemies.getWallEnemies();
+        this.gameState = GameState.IN_GAME;
     }
 
     draw() {
         this.map.draw(this.ctx);
-        this.player.draw(this.ctx);
         this.tileGenerator.draw(this.ctx);
+        this.player.draw(this.ctx);
         /**
          * adding soldiers
          */
@@ -46,11 +52,11 @@ export default class Game {
         /**
          * adding snipers(riflemen)
          */
-        this.snipers.forEach((sniper, i) => {
-            if (sniper.dead) {
-                this.snipers.splice(i, 1);
+        this.snipers.forEach((enemy, index) => {
+            if (enemy.dead) {
+                this.snipers.splice(index, 1);
             }
-            sniper.draw(this.ctx);
+            enemy.draw(this.ctx);
         });
         /**
          * adding wall cannons and wall turrets
@@ -102,12 +108,37 @@ export default class Game {
         this.wallEnemies.forEach(enemy => {
             enemy.bulletArr.forEach(bullet => bullet.update(enemy));
         });
+        // if (this.player.dead) this.gameState = GameState.DIED;
     }
 
     start() {
         this.ctx.clearRect(0, 0, CONSTANTS.gameWidth, CONSTANTS.gameHeight);
-        this.update();
-        this.draw();
+        switch (this.gameState) {
+            case GameState.INTRO:
+                break;
+            case GameState.BEGINING:
+                this.init();
+                break;
+            case GameState.IN_GAME:
+                this.update();
+                this.draw();
+                break;
+            case GameState.DIED:
+                this.reset();
+                this.gameState = GameState.BEGINING;
+                break;
+            case GameState.GAME_OVER:
+                break;
+        }
+        // this.update();
+        // this.draw();
         requestAnimationFrame(this.start.bind(this));
+    }
+
+    reset() {
+        this.player.reset();
+        this.tileGenerator.reset();
+        this.map.reset();
+        this.enemies.reset();
     }
 }

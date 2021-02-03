@@ -1,5 +1,5 @@
-// import HumanEnemy from './HumanEnemy.js';
 import Bullet from '../ammunition/Bullets.js';
+import HumanEnemy from './HumanEnemy.js';
 import { enemyData } from './enemyData.js';
 import { Gun, BulletOwner, BulletDirection } from '../utils/Enums.js';
 import { createImageElement, setXandYForBullet } from '../utils/utilities.js';
@@ -10,24 +10,25 @@ import { createImageElement, setXandYForBullet } from '../utils/utilities.js';
  * 
  * @author Shanand Shrestha
  */
-export default class RifleMen {
+export default class RifleMen extends HumanEnemy {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.sourceX = 0;
-        this.sourceY = 0;
-        this.height = 0;
-        this.width = 0;
-        this.enemyImg = createImageElement("./assets/humanEnemies.gif");
-        this.frameArr = enemyData.left;
-        this.dead = false;
-        this.dx = 0;
-        this.dy = 0;
-        this.gravity = 0.25;
-        this.onGround = false;
-        this.period = 8;
-        this.frame = 0;
-        this.frames = 0;
+        super(x, y, enemyData.rifleMan.left);
+        // this.x = x;
+        // this.y = y;
+        // this.sourceX = 0;
+        // this.sourceY = 0;
+        // this.height = 0;
+        // this.width = 0;
+        // this.enemyImg = createImageElement("./assets/humanEnemies.gif");
+        // this.frameArr = enemyData.rifleMan.left;
+        // this.dead = false;
+        // this.dx = 0;
+        // this.dy = 0;
+        // this.gravity = 0.25;
+        // this.onGround = false;
+        // this.period = 8;
+        // this.frame = 0;
+        // this.frames = 0;
         this.gun = Gun.DEFAULT;
         this.bulletDirection = BulletDirection.RIGHT;
         this.bulletArr = [];
@@ -35,20 +36,20 @@ export default class RifleMen {
         this.shoot = false;
     }
 
-    draw(ctx) {
-        if (!this.dead) {
-            this.sourceX = this.frameArr[this.frame % this.frameArr.length].xPos;
-            this.sourceY = this.frameArr[this.frame % this.frameArr.length].yPos;
-            this.height = this.frameArr[this.frame % this.frameArr.length].height;
-            this.width = this.frameArr[this.frame % this.frameArr.length].width;
+    // draw(ctx) {
+    //     if (!this.dead) {
+    //         this.sourceX = this.frameArr[this.frame % this.frameArr.length].xPos;
+    //         this.sourceY = this.frameArr[this.frame % this.frameArr.length].yPos;
+    //         this.height = this.frameArr[this.frame % this.frameArr.length].height;
+    //         this.width = this.frameArr[this.frame % this.frameArr.length].width;
 
-            ctx.drawImage(this.enemyImg, this.sourceX, this.sourceY, this.width, this.height,
-                this.x, this.y, this.width, this.height);
+    //         ctx.drawImage(this.enemyImg, this.sourceX, this.sourceY, this.width, this.height,
+    //             this.x, this.y, this.width, this.height);
 
-            this.frame += this.frames % this.period === 0 ? 1 : 0;
-            this.frames++;
-        }
-    }
+    //         this.frame += this.frames % this.period === 0 ? 1 : 0;
+    //         this.frames++;
+    //     }
+    // }
 
     update(player) {
         this.shoot = this.frames % 50 === 0 ? true : false;
@@ -97,13 +98,15 @@ export default class RifleMen {
             this.onGround = false;
         }
 
-        player.bullets.forEach(bullett => {
-            if ((bullett.x + bullett.width >= this.x && bullett.x + bullett.width < this.x + this.width && bullett.y >= this.y && bullett.y <= this.y + this.height)) {
-                bullett.dead = true;
-                this.dead = true;
-                player.score += 100;
-            }
-        });
+        // player.bullets.forEach(bullett => {
+        //     if ((bullett.x + bullett.width >= this.x && bullett.x + bullett.width <= this.x + this.width && bullett.y >= this.y && bullett.y <= this.y + this.height)) {
+        //         bullett.dead = true;
+        //         this.dead = true;
+        //         player.score += 100;
+        //     }
+        // });
+
+        this.checkBulletCollision(player);
 
         if (player.camera) {
             this.dx = -2.5;

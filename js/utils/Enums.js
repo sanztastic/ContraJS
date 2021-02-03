@@ -25,7 +25,7 @@ export const Gun = {
     DEFAULT: 0,
     MACHINE_GUN: 1,
     SPREAD_GUN: 2
-}
+};
 
 /**
  * Enum for the direction of the Bullet
@@ -39,7 +39,7 @@ export const BulletDirection = {
     DOWN_RIGHT: 5,
     DOWN: 6,
     DOWN_LEFT: 7
-}
+};
 
 /**
  * Enum for who shot the bullet
@@ -47,4 +47,14 @@ export const BulletDirection = {
 export const BulletOwner = {
     PLAYER: 0,
     ENEMY: 1
-}
+};
+
+/**
+ * Enum to keep track of game state
+ */
+export const GameState = {
+    INTRO: 0,
+    BEGINING: 1,
+    IN_GAME: 2,
+    GAME_OVER: 3
+};

@@ -37,7 +37,7 @@ class Player {
         this.drop = false;
         this.direction = Direction.RIGHT; //to check which direction the player is facing curently
         this.bullets = []; //array that holds bullet shot by the player
-        this.gun = Gun.DEFAULT; // to check which gun is the player holding
+        this.gun = Gun.SPREAD_GUN; // to check which gun is the player holding
         this.dead = false; // check if the player is dead or not
         this.bulletDirection = BulletDirection.RIGHT;
         this.bulletOwner = BulletOwner.PLAYER;
@@ -102,6 +102,7 @@ class Player {
                             bullet.bulletOwner = BulletOwner.PLAYER;
                             bullet.direction = this.bulletDirection;
                             this.bullets.push(bullet);
+                            console.log(bullet);
                             j += 20;
                         }
                     }
@@ -109,8 +110,8 @@ class Player {
                         let bullet = new Bullet(setXandYForBullet(this).x, setXandYForBullet(this).y, setXandYForBullet(this).dx, setXandYForBullet(this).dy);
                         bullet.bulletOwner = BulletOwner.PLAYER;
                         bullet.direction = this.bulletDirection;
-                        console.log(bullet);
                         this.bullets.push(bullet);
+                        console.log(bullet);
                     }
 
                     break;
@@ -267,7 +268,6 @@ class Player {
             soldierArr.forEach(soldier => {
                 if ((soldier.x <= this.destinationX + this.width && soldier.x + soldier.width >= this.destinationX + this.width)
                     && (soldier.y + soldier.height >= this.destinationY + this.height && soldier.y <= this.destinationY + this.height)) {
-                    console.log(true);
                     this.dead = true;
                     this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                 }
@@ -276,7 +276,6 @@ class Player {
             snipers.forEach(sniper => {
                 if ((sniper.x <= this.destinationX + this.width && sniper.x + sniper.width >= this.destinationX + this.width)
                     && (sniper.y + sniper.height >= this.destinationY + this.height && sniper.y <= this.destinationY + this.height)) {
-                    console.log(true);
                     this.dead = true;
                     this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                     this.dy = -3;
@@ -295,8 +294,7 @@ class Player {
         } else if (Key.RIGHT && Key.Z && Key.UP) {
             this.bulletDirection = BulletDirection.RIGHT_UP;
         } else if (Key.LEFT && Key.Z && Key.UP) {
-            this.bulletDirection = BulletDirection.LEFT_UP
-            console.log(this.bulletDirection);
+            this.bulletDirection = BulletDirection.LEFT_UP;
         } else if (Key.UP && Key.Z) {
             this.bulletDirection = BulletDirection.UP;
         }
@@ -324,6 +322,36 @@ class Player {
                 this.dy = -3;
             }
         });
+    }
+
+    reset() {
+        this.destinationX = 0;
+        this.destinationY = 0;
+        this.dx = 2;
+        this.dy = 0;
+        this.height = 0;
+        this.width = 0;
+        this.onGround = false; //to check whether player is in ground 
+        this.onWater = false;  //to check whether player is in water
+        this.jumping = false;
+        this.isProne = false;
+        this.camera = false; //to check whether the camera is moving or not wit the player
+        this.fall = false; //to make the player fall one tile down
+        this.frame = 0;
+        this.frames = 0;
+        this.period = 8; //hold time for player animation
+        this.drop = false;
+        this.direction = Direction.RIGHT; //to check which direction the player is facing curently
+        this.bullets = []; //array that holds bullet shot by the player
+        this.gun = Gun.DEFAULT; // to check which gun is the player holding
+        this.dead = false; // check if the player is dead or not
+        this.bulletDirection = BulletDirection.RIGHT;
+        this.bulletOwner = BulletOwner.PLAYER;
+        this.score = 0;
+
+
+        document.removeEventListener('keydown', this.keyPressed(this));
+        document.removeEventListener('keyup', this.keyReleased(this));
     }
 }
 
