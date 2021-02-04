@@ -22,7 +22,7 @@ export const playerData = {
         height: 69
     },
     {
-        xPos: 348,
+        xPos: 164,
         yPos: 37,
         width: 48,
         height: 67

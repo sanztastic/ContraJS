@@ -14,7 +14,36 @@ export const bulletData = {
         yPos: 974,
         width: 12,
         height: 12
-    }
+    },
+    pillbox: {
+        xPos: 152,
+        yPos: 290,
+        width: 48,
+        height: 30
+    },
+    gunData: [
+        {
+            xPos: 474,
+            yPos: 290,
+            width: 48,
+            height: 30,
+            name: 0
+        },
+        {
+            xPos: 204,
+            yPos: 290,
+            width: 48,
+            height: 30,
+            name: 1
+        },
+        {
+            xPos: 366,
+            yPos: 290,
+            width: 50,
+            height: 30,
+            name: 2
+        }
+    ]
 };
 
 export const blastData = {

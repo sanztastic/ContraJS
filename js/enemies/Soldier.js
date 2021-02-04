@@ -18,13 +18,17 @@ export default class Soldier extends HumanEnemy {
         super(x, y, enemyData.soldier.left);
     }
     update(player) {
+        this.ground = false;
         if (this.onGround) {
             this.dy = 0;
             this.dx = -2.5;
         } else {
+            this.ground = false;
             this.dy += this.gravity;
+            this.dx *= 0.8;
         }
-        if (this.x <= 0) {
+
+        if (this.x + this.height <= 0) {
             this.dead = true;
             this.onGround = false;
             this.blast = true;

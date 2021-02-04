@@ -3,7 +3,7 @@ import { playerData } from './playerData.js';
 import * as CONSTANTS from '../utils/constants.js';
 import { Direction, Key, Gun, BulletOwner, BulletDirection } from '../utils/Enums.js';
 import Bullet from '../ammunition/Bullets.js';
-import Life from './Life.js';
+import PillBoxSensor from '../ammunition/PillBoxSensor.js';
 
 /**
  * These class does the logic for the player on the game from drawing and updating the player
@@ -43,6 +43,7 @@ class Player {
         this.bulletDirection = BulletDirection.RIGHT;
         this.bulletOwner = BulletOwner.PLAYER;
         this.score = 0;
+        this.pillboxArr = [];
 
         document.addEventListener('keydown', this.keyPressed.bind(this));
         document.addEventListener('keyup', this.keyReleased.bind(this));
@@ -74,13 +75,12 @@ class Player {
                 break;
 
             case 40: // down arrow
-                this.isProne = true;
-                // this.holdLeft = false;
-                // this.holdRight = false;
-                // this.jumping = false;
-                Key.DOWN = true;
-                this.dx = 0;
-                this.frameArr = this.onGround ? ((this.direction == Direction.RIGHT) ? playerData.proneRight : playerData.proneLeft) : playerData.water.prone;
+                if (this.onGround || this.onWater) {
+                    this.isProne = true;
+                    Key.DOWN = true;
+                    this.dx = 0;
+                    this.frameArr = this.onGround ? ((this.direction == Direction.RIGHT) ? playerData.proneRight : playerData.proneLeft) : playerData.water.prone;
+                }
                 break;
 
             case 88: //x for jumping
@@ -103,7 +103,6 @@ class Player {
                             bullet.bulletOwner = BulletOwner.PLAYER;
                             bullet.direction = this.bulletDirection;
                             this.bullets.push(bullet);
-                            console.log(bullet);
                             j += 20;
                         }
                     }
@@ -113,7 +112,6 @@ class Player {
                         bullet.direction = this.bulletDirection;
                         this.bullets.push(bullet);
                     }
-
                     break;
                 }
         }
@@ -123,27 +121,27 @@ class Player {
 
             case 37: //left arrow
                 Key.LEFT = false;
-                this.frame = 0;
+                // this.frame = 0;
                 break;
 
             case 38: //up arrow
                 //up arroww stufff 
                 this.direction = Direction.UP;
                 Key.UP = false;
-                this.frame = 0;
+                // this.frame = 0;
                 break;
 
             case 39: //right arrow
                 Key.RIGHT = false;
                 // this.frameArr = playerData.default;
-                this.frame = 0;
+                // this.frame = 0;
                 break;
 
             case 40: // down arrow is for proning
                 this.isProne = false;
                 Key.DOWN = false;
                 // this.frameArr = this.onGround ? playerData.default : playerData.water.default;
-                this.frame = 0;
+                // this.frame = 0;
                 break;
 
             case 88: //x for jumping
@@ -153,11 +151,13 @@ class Player {
                         this.dy = 1;
                     }
                 }
+                // this.frame = 0;
                 break;
 
             case 90: //z for shooting
                 //shooting stufff
                 Key.Z = false;
+                // this.frame = 0;
                 break;
         }
     }
@@ -181,10 +181,12 @@ class Player {
         }
         if (this.dead) {
             if (this.frame % this.frameArr.length === ((this.direction == Direction.RIGHT) ? playerData.deadRight.length - 1 : playerData.deadLeft.length - 1)) {
-                this.dead = false;
                 // this.onGround = true;
                 this.destinationX = 0 + this.dx;
                 this.destinationY = 0;
+                this.onGround = false;
+                this.onWater = false;
+                this.dead = false;
             }
         }
         // }
@@ -193,6 +195,12 @@ class Player {
     }
 
     update(soldierArr, snipers, wallEnemies, mainBoss, life) {
+
+        if (this.score % 1000 == 0) {
+            this.pillboxArr.push(new PillBoxSensor(this.destinationX, this.destinationY));
+        }
+
+
         if (Key.LEFT && !this.dead) {
             if (!this.jumping) {
                 if (!(Key.UP || Key.DOWN || Key.Z)) {
@@ -233,7 +241,7 @@ class Player {
                 this.frameArr = (this.direction == Direction.RIGHT) ? playerData.defaultRight : playerData.defaultLeft;
                 this.bulletDirection = (this.direction == Direction.RIGHT) ? BulletDirection.RIGHT : BulletDirection.LEFT;
                 this.dx *= 0.8;
-                this.frame = 0;
+                // this.frame = 0;
             }
         }
         /**
@@ -247,17 +255,40 @@ class Player {
                     this.frameArr = (this.direction == Direction.RIGHT) ? playerData.water.defaultRight : playerData.water.defaultLeft;
                 }
                 this.dx *= 0.8;
-                this.frame = 0;
+                // this.frame = 0;
             }
         }
         else {
             this.dy += this.gravity;
         }
 
+        /**
+         * for the bullet shooting direction
+         */
+        if (Key.RIGHT && Key.Z && !(Key.LEFT || Key.UP || Key.DOWN)) {
+            this.bulletDirection = BulletDirection.RIGHT;
+        } else if (Key.LEFT && Key.Z && !(Key.RIGHT || Key.UP || Key.DOWN)) {
+            this.bulletDirection = BulletDirection.LEFT;
+        } else if (Key.RIGHT && Key.Z && Key.DOWN) {
+            this.bulletDirection = BulletDirection.DOWN_RIGHT;
+        } else if (Key.LEFT && Key.Z && Key.DOWN) {
+            this.bulletDirection = BulletDirection.DOWN_LEFT;
+        } else if (Key.RIGHT && Key.Z && Key.UP) {
+            this.bulletDirection = BulletDirection.RIGHT_UP;
+        } else if (Key.LEFT && Key.Z && Key.UP) {
+            this.bulletDirection = BulletDirection.LEFT_UP;
+        } else if (Key.UP && Key.Z) {
+            this.bulletDirection = BulletDirection.UP;
+        }
+
+
         if (this.destinationX <= 0) {
             this.destinationX = 0;
         }
-        if (this.destinationY + this.height > CONSTANTS.gameHeight) {
+        if (this.destinationY <= 0) {
+            this.destinationY = 0;
+        }
+        if (this.destinationY + this.height >= CONSTANTS.gameHeight) {
 
             this.dead = true;
             life.lives--;
@@ -299,32 +330,23 @@ class Player {
 
         }
 
-        if (Key.RIGHT && Key.Z && !(Key.LEFT || Key.UP || Key.DOWN)) {
-            this.bulletDirection = BulletDirection.RIGHT;
-        } else if (Key.LEFT && Key.Z && !(Key.RIGHT || Key.UP || Key.DOWN)) {
-            this.bulletDirection = BulletDirection.LEFT;
-        } else if (Key.RIGHT && Key.Z && Key.DOWN) {
-            this.bulletDirection = BulletDirection.DOWN_RIGHT;
-        } else if (Key.LEFT && Key.Z && Key.DOWN) {
-            this.bulletDirection = BulletDirection.DOWN_LEFT;
-        } else if (Key.RIGHT && Key.Z && Key.UP) {
-            this.bulletDirection = BulletDirection.RIGHT_UP;
-        } else if (Key.LEFT && Key.Z && Key.UP) {
-            this.bulletDirection = BulletDirection.LEFT_UP;
-        } else if (Key.UP && Key.Z) {
-            this.bulletDirection = BulletDirection.UP;
-        }
-
+        /**
+         * check bullet collision with the enemy bullets
+         */
         snipers.forEach(sniper => this.checkBulletCollision(sniper, life));
         wallEnemies.forEach(enemy => this.checkBulletCollision(enemy, life));
         mainBoss.guardCannons.forEach(cannon => this.checkBulletCollision(cannon, life));
 
+        /**
+         * to code for when to start or stop moving the camera
+         */
         if (this.destinationX + this.width > (CONSTANTS.gameWidth / 2)) {
             this.destinationX = ((CONSTANTS.gameWidth / 2) - this.width) - 2;
             this.camera = true;
-        } else if (mainBoss.x - this.destinationX <= 200) {
-            this.camera = false;
         }
+        // else if (mainBoss.x - this.destinationX <= 200) {
+        //     this.camera = false;
+        // }
         else {
             this.camera = false;
         }

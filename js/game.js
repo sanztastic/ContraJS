@@ -41,6 +41,7 @@ export default class Game {
         this.gameOver = new GameOver();
         this.gameState = GameState.INTRO;
         this.life = new Life();
+
         document.addEventListener('DOMContentLoaded', () => {
             let theme = new Audio('./sounds/theme.mp3');
             theme.autoplay = true;
@@ -118,6 +119,13 @@ export default class Game {
             });
         });
 
+        this.player.pillboxArr.forEach((pillbox, index) => {
+            if (this.finish) {
+                this.pillboxArr.splice(index, 1);
+            }
+            pillbox.draw(this.ctx);
+        });
+
     }
 
     update() {
@@ -136,6 +144,10 @@ export default class Game {
         this.wallEnemies.forEach(enemy => {
             enemy.bulletArr.forEach(bullet => bullet.update(enemy));
         });
+        this.player.pillboxArr.forEach(pillbox => {
+            pillbox.update(this.player);
+        });
+
         if (this.life.gameOver || this.mainBoss.dead) this.gameState = GameState.GAME_OVER;
     }
 
