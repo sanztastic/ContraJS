@@ -337,9 +337,9 @@ class Player {
         player.bulletArr.forEach((bullet) => {
             if ((bullet.x + bullet.width >= this.destinationX && bullet.x + bullet.width < this.destinationX + this.width && bullet.y >= this.destinationY && bullet.y <= this.destinationY + this.height)) {
                 bullet.dead = true;
-                // this.dead = true;
-                // life.lives--;
-                // this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                this.dead = true;
+                life.lives--;
+                this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                 // this.dy = -3;
             }
         });
