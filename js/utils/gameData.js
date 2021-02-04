@@ -274,3 +274,57 @@ export const waterTileData = {
     width: 3455,
     height: 20
 };
+
+/**
+ * Bridge Tile data
+ */
+export const bridgeTileData = [
+    {
+        x: 1538,
+        y: 235,
+        width: 65,
+        height: 63
+    },
+    {
+        x: 1603,
+        y: 235,
+        width: 65,
+        height: 63
+    },
+    {
+        x: 1666,
+        y: 235,
+        width: 65,
+        height: 63
+    },
+    {
+        x: 1730,
+        y: 235,
+        width: 65,
+        height: 63
+    },
+    {
+        x: 2114,
+        y: 235,
+        width: 65,
+        height: 63
+    },
+    {
+        x: 2178,
+        y: 235,
+        width: 65,
+        height: 63
+    },
+    {
+        x: 2242,
+        y: 235,
+        width: 65,
+        height: 63
+    },
+    {
+        x: 2306,
+        y: 235,
+        width: 65,
+        height: 63
+    }
+];

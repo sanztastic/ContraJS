@@ -324,3 +324,45 @@ export const enemyData = {
 
     }
 }
+
+export const bossData = {
+    body: {
+        xPos: 386,
+        yPos: 16,
+        width: 226,
+        height: 372
+    },
+    wallCannonRight: {
+        xPos: 404,
+        yPos: 432,
+        width: 26,
+        height: 12
+    },
+    wallCannonLeft: {
+        xPos: 404,
+        yPos: 446,
+        width: 22,
+        height: 12
+    },
+    gate: [
+        {
+            xPos: 438,
+            yPos: 396,
+            width: 48,
+            height: 62
+        },
+        {
+            xPos: 494,
+            yPos: 396,
+            width: 48,
+            height: 62
+        },
+        {
+            xPos: 550,
+            yPos: 396,
+            width: 48,
+            height: 62
+        }
+    ]
+
+};

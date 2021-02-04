@@ -7,6 +7,7 @@ import { GameState } from './utils/Enums.js';
 import StartScreen from './backgrounds/StartScreen.js';
 import GameOver from './backgrounds/GameOver.js';
 import Life from './players/Life.js';
+import MainBoss from './enemies/boss/MainBoss.js';
 
 /**
  * These class holds the main game logic and is the main class from which the game is ran.
@@ -35,10 +36,16 @@ export default class Game {
         this.enemyArr = this.enemies.getEnemies();
         this.snipers = this.enemies.getRifleMen();
         this.wallEnemies = this.enemies.getWallEnemies();
+        this.mainBoss = new MainBoss();
         this.startScreen = new StartScreen();
         this.gameOver = new GameOver();
         this.gameState = GameState.INTRO;
         this.life = new Life();
+        document.addEventListener('DOMContentLoaded', () => {
+            let theme = new Audio('./sounds/theme.mp3');
+            theme.autoplay = true;
+            theme.play();
+        });
 
         document.addEventListener('keyup', (evt) => {
             if (evt.keyCode === 32 && this.gameState != GameState.IN_GAME) {
@@ -54,6 +61,7 @@ export default class Game {
         this.tileGenerator.draw(this.ctx);
         this.player.draw(this.ctx);
         this.life.draw(this.ctx);
+        this.mainBoss.draw(this.ctx);
         /**
          * adding soldiers
          */
@@ -115,6 +123,7 @@ export default class Game {
         this.map.update(this.player);
         this.player.update(this.enemyArr, this.snipers, this.wallEnemies, this.life);
         this.life.update();
+        this.mainBoss.update(this.player);
         this.enemyArr.forEach(enemy => enemy.update(this.player));
         this.snipers.forEach(sniper => sniper.update(this.player, this.ctx));
         this.wallEnemies.forEach(wallEnemy => wallEnemy.update(this.player));
