@@ -46,15 +46,15 @@ export default class Bullet {
             this.dead = true;
         }
 
-        this.bullet = this.bulletOwner == BulletOwner.PLAYER ? ((player.gun == Gun.DEFAULT) ? bulletData.default : bulletData.other) : (this.bulletOwner = BulletOwner.BOSS ? bulletData.other : bulletData.default);
+        this.bullet = ((this.bulletOwner == BulletOwner.PLAYER) || (this.bulletOwner = BulletOwner.BOSS)) ? ((player.gun == Gun.DEFAULT) ? bulletData.default : bulletData.other) : bulletData.default;
 
         // this.dx = 5;
         this.damage = (player.gun == Gun.DEFAULT) ? 75 : 150;
 
-        if (this.bulletOwner == BulletOwner.BOSS) {
-            this.dy += 2;
-            this.dy--;
-        }
+        // if (this.bulletOwner == BulletOwner.BOSS) {
+        //     this.dy += 2;
+        //     this.dy--;
+        // }
 
         this.x += this.dx;
         this.y += this.dy;

@@ -53,8 +53,8 @@ export default class GuardCannon {
         let playerHeight = player.height;
         let playerWidth = player.width;
 
-        if (player.destinationX + player.width >= this.x - 300) {
-            console.log("near");
+        if (player.destinationX + player.width >= this.x - 100) {
+            player.camera = false;
             this.shoot = true;
         }
 

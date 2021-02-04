@@ -322,7 +322,10 @@ class Player {
         if (this.destinationX + this.width > (CONSTANTS.gameWidth / 2)) {
             this.destinationX = ((CONSTANTS.gameWidth / 2) - this.width) - 2;
             this.camera = true;
-        } else {
+        } else if (mainBoss.x - this.destinationX <= 200) {
+            this.camera = false;
+        }
+        else {
             this.camera = false;
         }
 
@@ -334,9 +337,9 @@ class Player {
         player.bulletArr.forEach((bullet) => {
             if ((bullet.x + bullet.width >= this.destinationX && bullet.x + bullet.width < this.destinationX + this.width && bullet.y >= this.destinationY && bullet.y <= this.destinationY + this.height)) {
                 bullet.dead = true;
-                this.dead = true;
-                life.lives--;
-                this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                // this.dead = true;
+                // life.lives--;
+                // this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                 // this.dy = -3;
             }
         });
