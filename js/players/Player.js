@@ -270,20 +270,20 @@ class Player {
             soldierArr.forEach(soldier => {
                 if ((soldier.x <= this.destinationX + this.width && soldier.x + soldier.width >= this.destinationX + this.width)
                     && (soldier.y + soldier.height >= this.destinationY + this.height && soldier.y <= this.destinationY + this.height)) {
-                    // this.dead = true;
-                    // life.lives -= 1;
-                    // this.onGround = false;
-                    // this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                    this.dead = true;
+                    life.lives -= 1;
+                    this.onGround = false;
+                    this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                 }
             });
 
             snipers.forEach(sniper => {
                 if ((sniper.x <= this.destinationX + this.width && sniper.x + sniper.width >= this.destinationX + this.width)
                     && (sniper.y + sniper.height >= this.destinationY + this.height && sniper.y <= this.destinationY + this.height)) {
-                    // this.dead = true;
-                    // life.lives--;
-                    // this.onGround = false;
-                    // this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                    this.dead = true;
+                    life.lives--;
+                    this.onGround = false;
+                    this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                     // this.dy = -3;
                 }
             });
@@ -322,10 +322,10 @@ class Player {
     checkBulletCollision(player, life) {
         player.bulletArr.forEach((bullet) => {
             if ((bullet.x + bullet.width >= this.destinationX && bullet.x + bullet.width < this.destinationX + this.width && bullet.y >= this.destinationY && bullet.y <= this.destinationY + this.height)) {
-                // bullet.dead = true;
-                // this.dead = true;
-                // life.lives--;
-                // this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                bullet.dead = true;
+                this.dead = true;
+                life.lives--;
+                this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                 // this.dy = -3;
             }
         });
