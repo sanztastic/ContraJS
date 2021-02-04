@@ -192,7 +192,7 @@ class Player {
         // ctx.fillRect(this.destinationX, this.destinationY, this.width, this.height);
     }
 
-    update(soldierArr, snipers, wallEnemies, life) {
+    update(soldierArr, snipers, wallEnemies, mainBoss, life) {
         if (Key.LEFT && !this.dead) {
             if (!this.jumping) {
                 if (!(Key.UP || Key.DOWN || Key.Z)) {
@@ -287,6 +287,16 @@ class Player {
                     // this.dy = -3;
                 }
             });
+
+            if ((mainBoss.x <= this.destinationX + this.width && mainBoss.x + mainBoss.width >= this.destinationX + this.width)
+                && (mainBoss.y + mainBoss.height >= this.destinationY + this.height && mainBoss.y <= this.destinationY + this.height)) {
+                this.dead = true;
+                life.lives--;
+                this.onGround = false;
+                this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
+                // this.dy = -3;
+            }
+
         }
 
         if (Key.RIGHT && Key.Z && !(Key.LEFT || Key.UP || Key.DOWN)) {
@@ -307,6 +317,7 @@ class Player {
 
         snipers.forEach(sniper => this.checkBulletCollision(sniper, life));
         wallEnemies.forEach(enemy => this.checkBulletCollision(enemy, life));
+        mainBoss.guardCannons.forEach(cannon => this.checkBulletCollision(cannon, life));
 
         if (this.destinationX + this.width > (CONSTANTS.gameWidth / 2)) {
             this.destinationX = ((CONSTANTS.gameWidth / 2) - this.width) - 2;

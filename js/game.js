@@ -117,11 +117,12 @@ export default class Game {
                 bullet.draw(this.ctx);
             });
         });
+
     }
 
     update() {
         this.map.update(this.player);
-        this.player.update(this.enemyArr, this.snipers, this.wallEnemies, this.life);
+        this.player.update(this.enemyArr, this.snipers, this.wallEnemies, this.mainBoss, this.life);
         this.life.update();
         this.mainBoss.update(this.player);
         this.enemyArr.forEach(enemy => enemy.update(this.player));
@@ -135,7 +136,7 @@ export default class Game {
         this.wallEnemies.forEach(enemy => {
             enemy.bulletArr.forEach(bullet => bullet.update(enemy));
         });
-        if (this.life.gameOver) this.gameState = GameState.GAME_OVER;
+        if (this.life.gameOver || this.mainBoss.dead) this.gameState = GameState.GAME_OVER;
     }
 
     start() {

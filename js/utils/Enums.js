@@ -38,7 +38,8 @@ export const BulletDirection = {
     RIGHT: 4,
     DOWN_RIGHT: 5,
     DOWN: 6,
-    DOWN_LEFT: 7
+    DOWN_LEFT: 7,
+    BOSS_LEFT: 8
 };
 
 /**
@@ -46,7 +47,8 @@ export const BulletDirection = {
  */
 export const BulletOwner = {
     PLAYER: 0,
-    ENEMY: 1
+    ENEMY: 1,
+    BOSS: 2
 };
 
 /**

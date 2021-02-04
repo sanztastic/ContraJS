@@ -59,7 +59,7 @@ export default class WallEnemy {
         this.frames++;
     }
 
-    checkBulletCollision(player, ctx) {
+    checkBulletCollision(player) {
         if (!this.dead) {
             player.bullets.forEach((bullet) => {
                 if ((bullet.x + bullet.width >= this.x && bullet.x + bullet.width < this.x + this.width && bullet.y >= this.y && bullet.y <= this.y + this.height)) {

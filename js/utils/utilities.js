@@ -71,6 +71,11 @@ export const setXandYForBullet = (object) => {
             dx = -5;
             dy = 5;
             break;
+        case BulletDirection.BOSS_LEFT:
+            x = objectX;
+            y = objectY;
+            dx = -5;
+            dy = 0;
     }
     return { x, y, dx, dy };
 }

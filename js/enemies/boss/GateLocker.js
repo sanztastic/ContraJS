@@ -7,11 +7,14 @@ export default class GateLocker {
     constructor(x, y, lockArr) {
         this.x = x;
         this.y = y;
-        this.image = createImageElement('./assets/boss.gif');
+        this.image = createImageElement('./assets/MainBoss.gif');
         this.frameArr = lockArr;
         this.frames = 0;
         this.frame = 0;
         this.period = 8;
+        this.dx = 0;
+        this.dead = false;
+        this.health = 20000;
     }
     draw(ctx) {
         this.sourceX = this.frameArr[this.frame % this.frameArr.length].xPos;
@@ -26,6 +29,30 @@ export default class GateLocker {
         this.frames++;
     }
     update(player) {
+        this.dx = 0;
 
+        this.checkBulletCollision(player);
+
+        if (player.camera) {
+            this.dx = -2.5;
+        }
+        this.x += this.dx;
+    }
+
+    checkBulletCollision(player) {
+        if (!this.dead) {
+            player.bullets.forEach((bullet) => {
+                if ((bullet.x + bullet.width >= this.x && bullet.x + bullet.width < this.x + this.width && bullet.y >= this.y && bullet.y <= this.y + this.height)) {
+
+                    bullet.dead = true;
+                    this.health -= bullet.damage;
+                    if (this.health <= 0) {
+                        this.dead = true;
+                        player.score += 20000;
+                    }
+
+                }
+            });
+        }
     }
 }
