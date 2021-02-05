@@ -1,6 +1,7 @@
 export default class GameOver {
-    constructor() {
+    constructor(msg) {
         this.highScore = localStorage.getItem('Contra') == 'undefined' ? 0 : localStorage.getItem('Contra');
+        this.msg = msg;
     }
 
     draw(ctx, player) {
@@ -18,7 +19,7 @@ export default class GameOver {
         // ctx.strokeText("High Score: ", 100, 100);
 
         ctx.font = '18px Contra NES';
-        ctx.fillText(`GAME OVER`, 170, 200);
+        ctx.fillText(this.msg, 170, 200);
         ctx.fillText('PRESS SPACE TO CONTINUE', 50, 280);
     }
 }

@@ -8,6 +8,7 @@ import StartScreen from './backgrounds/StartScreen.js';
 import GameOver from './backgrounds/GameOver.js';
 import Life from './players/Life.js';
 import MainBoss from './enemies/boss/MainBoss.js';
+import PillBoxSensor from './ammunition/PillBoxSensor.js';
 
 /**
  * These class holds the main game logic and is the main class from which the game is ran.
@@ -38,9 +39,11 @@ export default class Game {
         this.wallEnemies = this.enemies.getWallEnemies();
         this.mainBoss = new MainBoss();
         this.startScreen = new StartScreen();
-        this.gameOver = new GameOver();
+        this.gameOver = new GameOver("GAME OVER");
+        this.gameFinish = new GameOver("YOU WON");
         this.gameState = GameState.INTRO;
         this.life = new Life();
+        // this.pillbox = new PillBoxSensor(0, 0);
 
         document.addEventListener('DOMContentLoaded', () => {
             let theme = new Audio('./sounds/theme.mp3');
@@ -51,7 +54,7 @@ export default class Game {
         document.addEventListener('keyup', (evt) => {
             if (evt.keyCode === 32 && this.gameState != GameState.IN_GAME) {
                 if (this.gameState == GameState.INTRO) this.gameState = GameState.IN_GAME;
-                if (this.gameState == GameState.GAME_OVER) location.reload();
+                if (this.gameState == GameState.GAME_OVER || this.gameState == GameState.FINISH) location.reload();
             }
 
         });
@@ -120,11 +123,13 @@ export default class Game {
         });
 
         this.player.pillboxArr.forEach((pillbox, index) => {
-            if (this.finish) {
+            if (this.end) {
                 this.pillboxArr.splice(index, 1);
             }
             pillbox.draw(this.ctx);
         });
+
+        // this.pillbox.draw(this.ctx);
 
     }
 
@@ -147,6 +152,7 @@ export default class Game {
         this.player.pillboxArr.forEach(pillbox => {
             pillbox.update(this.player);
         });
+        // this.pillbox.update(this.player);
 
         if (this.life.gameOver || this.mainBoss.dead) this.gameState = GameState.GAME_OVER;
     }
@@ -171,6 +177,8 @@ export default class Game {
             case GameState.GAME_OVER:
                 this.gameOver.draw(this.ctx, this.player);
                 break;
+            case GameState.FINISH:
+                this.gameFinish.draw(this.ctx, this.player);
         }
         // this.update();
         // this.draw();

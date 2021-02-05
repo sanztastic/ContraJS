@@ -5,6 +5,7 @@ import { Direction, Key, Gun, BulletOwner, BulletDirection } from '../utils/Enum
 import Bullet from '../ammunition/Bullets.js';
 import PillBoxSensor from '../ammunition/PillBoxSensor.js';
 
+
 /**
  * These class does the logic for the player on the game from drawing and updating the player
  * to it's movement and all other stuff that the player does in the game.
@@ -38,12 +39,16 @@ class Player {
         this.drop = false;
         this.direction = Direction.RIGHT; //to check which direction the player is facing curently
         this.bullets = []; //array that holds bullet shot by the player
-        this.gun = Gun.MACHINE_GUN; // to check which gun is the player holding
+        this.gun = Gun.DEFAULT; // to check which gun is the player holding
         this.dead = false; // check if the player is dead or not
         this.bulletDirection = BulletDirection.RIGHT;
         this.bulletOwner = BulletOwner.PLAYER;
         this.score = 0;
         this.pillboxArr = [];
+        this.pillboxPlace = [1000, 18000, 3200, 3800, 4200, 5000, 6200, 6500];
+        for (let i = 0; i < 3; i++) {
+            this.pillboxArr.push(new PillBoxSensor(this.pillboxPlace[i], 10));
+        }
 
         document.addEventListener('keydown', this.keyPressed.bind(this));
         document.addEventListener('keyup', this.keyReleased.bind(this));
@@ -196,11 +201,6 @@ class Player {
 
     update(soldierArr, snipers, wallEnemies, mainBoss, life) {
 
-        if (this.score % 1000 == 0) {
-            this.pillboxArr.push(new PillBoxSensor(this.destinationX, this.destinationY));
-        }
-
-
         if (Key.LEFT && !this.dead) {
             if (!this.jumping) {
                 if (!(Key.UP || Key.DOWN || Key.Z)) {
@@ -288,11 +288,12 @@ class Player {
         if (this.destinationY <= 0) {
             this.destinationY = 0;
         }
-        if (this.destinationY + this.height >= CONSTANTS.gameHeight) {
-
+        if (this.destinationY > CONSTANTS.gameHeight) {
+            console.log("player fall");
             this.dead = true;
             life.lives--;
-            this.destinationY = CONSTANTS.gameHeight - this.height;
+            this.gun = Gun.DEFAULT;
+            // this.destinationY = CONSTANTS.gameHeight - this.height;
             this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
             this.onGround = false;
             this.onWater = false;
@@ -302,6 +303,7 @@ class Player {
                 if ((soldier.x <= this.destinationX + this.width && soldier.x + soldier.width >= this.destinationX + this.width)
                     && (soldier.y + soldier.height >= this.destinationY + this.height && soldier.y <= this.destinationY + this.height)) {
                     this.dead = true;
+                    this.gun = Gun.DEFAULT;
                     life.lives -= 1;
                     this.onGround = false;
                     this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
@@ -313,6 +315,7 @@ class Player {
                     && (sniper.y + sniper.height >= this.destinationY + this.height && sniper.y <= this.destinationY + this.height)) {
                     this.dead = true;
                     life.lives--;
+                    this.gun = Gun.DEFAULT;
                     this.onGround = false;
                     this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                     // this.dy = -3;
@@ -323,6 +326,7 @@ class Player {
                 && (mainBoss.y + mainBoss.height >= this.destinationY + this.height && mainBoss.y <= this.destinationY + this.height)) {
                 this.dead = true;
                 life.lives--;
+                this.gun = Gun.DEFAULT;
                 this.onGround = false;
                 this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                 // this.dy = -3;
@@ -361,6 +365,7 @@ class Player {
                 bullet.dead = true;
                 this.dead = true;
                 life.lives--;
+                this.gun = Gun.DEFAULT;
                 this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                 // this.dy = -3;
             }

@@ -58,5 +58,6 @@ export const GameState = {
     INTRO: 0,
     BEGINING: 1,
     IN_GAME: 2,
-    GAME_OVER: 3
+    GAME_OVER: 3,
+    FINISH: 4
 };

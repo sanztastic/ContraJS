@@ -36,6 +36,16 @@ export default class BasicTile extends TileFactory {
             }
         });
 
+        player.pillboxArr.forEach(box => {
+            if (box.destinationX + box.width > this.x && box.destinationX < this.x + this.width &&
+                box.destinationY + box.height > this.y && box.destinationY < this.y + this.height) {
+
+                box.onGround = true;
+                box.onWater = false;
+                box.y = this.y - box.height;
+            }
+        })
+
         if (player.camera) {
             this.dx = -2.5;
         }
