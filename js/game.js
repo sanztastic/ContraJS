@@ -8,7 +8,6 @@ import StartScreen from './backgrounds/StartScreen.js';
 import GameOver from './backgrounds/GameOver.js';
 import Life from './players/Life.js';
 import MainBoss from './enemies/boss/MainBoss.js';
-import PillBoxSensor from './ammunition/PillBoxSensor.js';
 
 /**
  * These class holds the main game logic and is the main class from which the game is ran.

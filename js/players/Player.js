@@ -253,6 +253,7 @@ class Player {
                     this.frameArr = (this.direction == Direction.RIGHT) ? playerData.water.shootRight : playerData.water.shootLeft;
                 } else {
                     this.frameArr = (this.direction == Direction.RIGHT) ? playerData.water.defaultRight : playerData.water.defaultLeft;
+                    this.bulletDirection = (this.direction == Direction.RIGHT) ? BulletDirection.RIGHT : BulletDirection.LEFT;
                 }
                 this.dx *= 0.8;
                 // this.frame = 0;
@@ -261,6 +262,11 @@ class Player {
         else {
             this.dy += this.gravity;
         }
+
+        // if (this.fall) {
+        //     this.destinationY = this.destinationY + 20;
+        //     this.fall = false;
+        // }
 
         /**
          * for the bullet shooting direction

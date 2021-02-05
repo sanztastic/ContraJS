@@ -1,7 +1,6 @@
 import { Gun, BulletOwner, BulletDirection } from '../utils/Enums.js';
 import { createImageElement } from '../utils/utilities.js';
 import Blast from '../ammunition/Blast.js';
-import { blastData } from '../ammunition/bulletData.js';
 
 /**
  * These class is the parent class for the enemies which are stuck to

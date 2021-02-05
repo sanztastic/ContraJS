@@ -9,7 +9,9 @@ export default class BasicTile extends TileFactory {
         this.dx = 0;
         // if (!player.fall) {
         if (player.destinationX + player.width > this.x && player.destinationX < this.x + this.width &&
-            player.destinationY + player.height > this.y && player.destinationY < this.y + this.height) {
+            player.destinationY + player.height > this.y && player.destinationY < this.y + this.height
+            // player.destinationY + player.height <= this.y + this.height
+        ) {
 
             player.onGround = true;
             player.onWater = false;

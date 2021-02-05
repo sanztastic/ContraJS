@@ -19,8 +19,6 @@ export default class Blast {
 
     draw(ctx) {
         if (this.dead) {
-            console.log(this);
-            console.log(this.x, this.y);
             this.sourceX = this.frameArr[this.frame % this.frameArr.length].xPos;
             this.sourceY = this.frameArr[this.frame % this.frameArr.length].yPos;
             this.height = this.frameArr[this.frame % this.frameArr.length].height;

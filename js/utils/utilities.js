@@ -76,7 +76,7 @@ export const setXandYForBullet = (object) => {
                 x = objectX;
                 y = objectY;
                 dx = -5;
-                dy = 5;
+                dy = -2;
             }
     }
     return { x, y, dx, dy };
