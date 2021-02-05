@@ -1,6 +1,7 @@
 import { createImageElement } from '../utils/utilities.js';
 import { bulletData } from './bulletData.js';
 import * as CONSTANT from '../utils/constants.js';
+import { Gun } from '../utils/Enums.js';
 
 /**
  * The box which consist of weapon when destroyed.
@@ -33,7 +34,7 @@ export default class PillBoxSensor {
         }
     }
 
-    update(player) {
+    update(player, life) {
         if (this.destroyed) {
             // console.log("destroyed");
             console.log(this.data);
@@ -66,13 +67,13 @@ export default class PillBoxSensor {
         if (this.x + this.width <= 0) {
             this.end = true;
         }
-        this.checkBulletCollision(player);
+        this.checkBulletCollision(player, life);
 
         this.x += this.dx;
         this.y += this.dy;
     }
 
-    checkBulletCollision(player) {
+    checkBulletCollision(player, life) {
         if (!this.dead) {
             player.bullets.forEach((bullet) => {
 
@@ -83,7 +84,13 @@ export default class PillBoxSensor {
                         console.log("owww!!");
                         player.score += 100;
                         this.data = bulletData.gunData[Math.floor(Math.random() * bulletData.gunData.length)];
-                        player.gun = this.data.name;
+
+                        if (this.data.name == Gun.LIFE) {
+                            life.lives++;
+                        } else {
+                            player.gun = this.data.name;
+                        }
+
                         console.log(this.data, "hey");
                     }
                 }

@@ -45,8 +45,8 @@ class Player {
         this.bulletOwner = BulletOwner.PLAYER;
         this.score = 0;
         this.pillboxArr = [];
-        this.pillboxPlace = [1000, 18000, 3200, 3800, 4200, 5000, 6200, 6500];
-        for (let i = 0; i < 3; i++) {
+        this.pillboxPlace = [1000, 1800, 3600, 4600, 5500, 6200];
+        for (let i = 0; i < 6; i++) {
             this.pillboxArr.push(new PillBoxSensor(this.pillboxPlace[i], 10));
         }
 
@@ -362,11 +362,11 @@ class Player {
     checkBulletCollision(player, life) {
         player.bulletArr.forEach((bullet) => {
             if ((bullet.x + bullet.width >= this.destinationX && bullet.x + bullet.width < this.destinationX + this.width && bullet.y >= this.destinationY && bullet.y <= this.destinationY + this.height)) {
+                this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                 bullet.dead = true;
                 this.dead = true;
                 life.lives--;
                 this.gun = Gun.DEFAULT;
-                this.frameArr = this.direction == Direction.RIGHT ? playerData.deadRight : playerData.deadLeft;
                 // this.dy = -3;
             }
         });

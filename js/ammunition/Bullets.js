@@ -54,6 +54,7 @@ export default class Bullet {
         // if (this.bulletOwner == BulletOwner.BOSS) {
         //     this.dy += 2;
         //     this.dy--;
+        //     this.dx = -7;
         // }
 
         this.x += this.dx;

@@ -14,7 +14,7 @@ export default class GateLocker {
         this.period = 8;
         this.dx = 0;
         this.dead = false;
-        this.health = 20000;
+        this.health = 10000;
     }
     draw(ctx) {
         this.sourceX = this.frameArr[this.frame % this.frameArr.length].xPos;

@@ -42,6 +42,13 @@ export const bulletData = {
             width: 50,
             height: 30,
             name: 2
+        },
+        {
+            xPos: 638,
+            yPos: 290,
+            width: 50,
+            height: 30,
+            name: 3
         }
     ]
 };

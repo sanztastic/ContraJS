@@ -150,11 +150,12 @@ export default class Game {
             enemy.bulletArr.forEach(bullet => bullet.update(enemy));
         });
         this.player.pillboxArr.forEach(pillbox => {
-            pillbox.update(this.player);
+            pillbox.update(this.player, this.life);
         });
         // this.pillbox.update(this.player);
 
-        if (this.life.gameOver || this.mainBoss.dead) this.gameState = GameState.GAME_OVER;
+        if (this.life.gameOver) this.gameState = GameState.GAME_OVER;
+        if (this.mainBoss.dead) this.gameState = GameState.FINISH;
     }
 
     start() {
@@ -179,6 +180,7 @@ export default class Game {
                 break;
             case GameState.FINISH:
                 this.gameFinish.draw(this.ctx, this.player);
+                break;
         }
         // this.update();
         // this.draw();

@@ -24,7 +24,8 @@ export const Key = {
 export const Gun = {
     DEFAULT: 0,
     MACHINE_GUN: 1,
-    SPREAD_GUN: 2
+    SPREAD_GUN: 2,
+    LIFE: 3
 };
 
 /**
