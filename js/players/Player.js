@@ -70,7 +70,7 @@ class Player {
                 } else if (this.onWater) {
                     this.frameArr = this.direction == Direction.RIGHT ? playerData.water.pointUpRightDir : playerData.water.pointUpLeftDir;
                 }
-                this.dx = 0;
+//                 this.dx = 0;
                 break;
 
             case 39: //right arrow
@@ -83,7 +83,7 @@ class Player {
                 if (this.onGround || this.onWater) {
                     this.isProne = true;
                     Key.DOWN = true;
-                    this.dx = 0;
+//                     this.dx = 0;
                     this.frameArr = this.onGround ? ((this.direction == Direction.RIGHT) ? playerData.proneRight : playerData.proneLeft) : playerData.water.prone;
                 }
                 break;
