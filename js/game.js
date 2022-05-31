@@ -199,7 +199,7 @@ function startAnimating(timestamp) {
 
     if (elapsed >= fpsInterval) {
        start = timestamp - (elapsed % fpsInterval);
-       this.start.bind(this);
+       this.start();
     }
 
     reset() {
