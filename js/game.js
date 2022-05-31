@@ -183,7 +183,7 @@ export default class Game {
         }
         // this.update();
         // this.draw();
-        requestAnimationFrame(this.start.bind(this),startAnimating);
+        requestAnimationFrame(startAnimating);
     }
     let start;
 let elapsed;
@@ -199,7 +199,7 @@ function startAnimating(timestamp) {
 
     if (elapsed >= fpsInterval) {
        start = timestamp - (elapsed % fpsInterval);
-       move();
+       this.start.bind(this);
     }
 
     reset() {
