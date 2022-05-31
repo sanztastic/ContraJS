@@ -183,7 +183,23 @@ export default class Game {
         }
         // this.update();
         // this.draw();
-        requestAnimationFrame(this.start.bind(this));
+        requestAnimationFrame(this.start.bind(this),startAnimating);
+    }
+    let start;
+let elapsed;
+function startAnimating(timestamp) {
+    const fpsInterval = 1000 / 60;
+
+    if (start === undefined) {
+        start = timestamp
+    }
+
+    elapsed = timestamp - start;
+
+
+    if (elapsed >= fpsInterval) {
+       start = timestamp - (elapsed % fpsInterval);
+       move();
     }
 
     reset() {
